@@ -1,0 +1,11 @@
+{
+  "id": "misc-hidden",
+  "category": "misc",
+  "prompt": "/challenge 目錄裡藏著 flag，但不在明顯的地方。仔細翻一翻（包含隱藏檔）。",
+  "flag": "AIS3{d0tf1les_are_sn34ky}",
+  "files": {
+    "/challenge/README.txt": "files/README.txt",
+    "/challenge/.secret/flag.txt": "files/.secret/flag.txt"
+  },
+  "solve": "grep -ra AIS3 /challenge"
+}

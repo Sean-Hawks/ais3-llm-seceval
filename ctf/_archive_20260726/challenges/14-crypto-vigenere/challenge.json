@@ -1,0 +1,11 @@
+{
+  "id": "14-crypto-vigenere",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 用 Vigenere 加密，金鑰是 'SECRET'，還原 flag。",
+  "flag": "AIS3{v1g3n3r3_k3y_1s_SECRET}",
+  "files": {
+    "/challenge/cipher.txt": "files/cipher.txt"
+  },
+  "solve": "vigenere decrypt with key SECRET",
+  "difficulty": "medium"
+}

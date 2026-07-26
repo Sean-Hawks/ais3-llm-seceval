@@ -1,0 +1,11 @@
+{
+  "id": "17-crypto-xor",
+  "category": "crypto",
+  "prompt": "/challenge/enc.bin 被單一位元組 XOR 加密，爆破金鑰（0-255）找出以 AIS3{ 開頭的明文。",
+  "flag": "AIS3{x0r_s1ngl3_byt3_brut3}",
+  "files": {
+    "/challenge/enc.bin": "files/enc.bin"
+  },
+  "solve": "brute 0-255, pick printable AIS3{...}",
+  "difficulty": "hard"
+}

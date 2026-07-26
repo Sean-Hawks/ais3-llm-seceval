@@ -1,0 +1,11 @@
+{
+  "id": "19-misc-reverse",
+  "category": "misc",
+  "prompt": "/challenge/rev.txt 是 flag 反轉後的字串，轉回來。",
+  "flag": "AIS3{r3v3rs3_th3_wh0l3_str1ng}",
+  "files": {
+    "/challenge/rev.txt": "files/rev.txt"
+  },
+  "solve": "rev / [::-1]",
+  "difficulty": "easy"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "12-crypto-atbash",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 用 Atbash（A↔Z 鏡射）加密，還原它。",
+  "flag": "AIS3{atb4sh_1s_a_m1rr0r}",
+  "files": {
+    "/challenge/cipher.txt": "files/cipher.txt"
+  },
+  "solve": "atbash 逆（自逆）",
+  "difficulty": "easy"
+}

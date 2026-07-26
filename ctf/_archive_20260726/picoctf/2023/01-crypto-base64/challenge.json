@@ -1,0 +1,12 @@
+{
+  "id": "01-crypto-base64",
+  "category": "crypto",
+  "prompt": "/challenge/enc.txt 是 base64，解碼取得 flag。",
+  "flag": "picoCTF{b4s3_2023}",
+  "files": {
+    "/challenge/enc.txt": "files/enc.txt"
+  },
+  "solve": "base64 -d",
+  "difficulty": "easy",
+  "year": "2023"
+}

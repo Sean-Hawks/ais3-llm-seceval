@@ -1,0 +1,13 @@
+{
+  "id": "04-hard-custom",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.py 是自訂加密，/challenge/flag.enc 是輸出。逆向還原 flag。",
+  "flag": "picoCTF{cu5t0m_2023}",
+  "files": {
+    "/challenge/cipher.py": "files/cipher.py",
+    "/challenge/flag.enc": "files/flag.enc"
+  },
+  "solve": "逆向 cipher.py",
+  "difficulty": "hard",
+  "year": "2023"
+}

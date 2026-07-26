@@ -1,0 +1,8 @@
+{
+  "id": "crypto-base64",
+  "category": "crypto",
+  "prompt": "/challenge/flag.txt 裡是一段被編碼過的文字。解碼它，取得 AIS3{...} flag。",
+  "flag": "AIS3{b4se64_1s_just_3nc0d1ng}",
+  "files": {"/challenge/flag.txt": "files/flag.txt"},
+  "solve": "base64 -d /challenge/flag.txt"
+}

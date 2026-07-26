@@ -1,0 +1,11 @@
+{
+  "id": "10-crypto-hex",
+  "category": "crypto",
+  "prompt": "/challenge/enc.txt 是 flag 的十六進位表示，還原它。",
+  "flag": "AIS3{h3x_1s_n0t_3ncryp710n}",
+  "files": {
+    "/challenge/enc.txt": "files/enc.txt"
+  },
+  "solve": "xxd -r -p / bytes.fromhex",
+  "difficulty": "easy"
+}

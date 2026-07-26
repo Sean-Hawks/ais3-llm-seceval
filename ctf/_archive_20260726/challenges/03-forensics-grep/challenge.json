@@ -1,0 +1,8 @@
+{
+  "id": "forensics-grep",
+  "category": "forensics",
+  "prompt": "/challenge/mystery.bin 是一個二進位檔，flag 被藏在一堆亂數位元組之間。把它找出來。",
+  "flag": "AIS3{gr3p_dash_a_w1ns}",
+  "files": {"/challenge/mystery.bin": "files/mystery.bin"},
+  "solve": "grep -a -o 'AIS3{[^}]*}' /challenge/mystery.bin"
+}

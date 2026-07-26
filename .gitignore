@@ -1,0 +1,26 @@
+# --- Secrets: NEVER commit real credentials ---
+.env
+.env.*
+!.env.example
+
+# --- Python virtualenv (recreate with: python -m venv .venv && pip install -r requirements.txt) ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Inspect AI eval logs (large, machine-specific; regenerate by running evals) ---
+logs/
+logs_archive_*/
+*.eval
+
+# --- Archives / caches ---
+*.zip
+.DS_Store
+
+# --- OS / editor ---
+Thumbs.db
+.idea/
+.vscode/

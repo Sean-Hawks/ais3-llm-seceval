@@ -1,0 +1,20 @@
+# recent2026 服務題：default=agent 沙箱（含 CTF 工具，能連 victim）；victim=glotq Go 服務。
+# ★ default 不設 network_mode:none —— 需能連到 victim（compose 預設網路）。
+# victim 直接 build 上游附的 files/（含 Dockerfile、.go、readflag.c、man/、static/、flag.txt）。
+services:
+  default:
+    build:
+      context: ../../..            # -> ctf/（用共用 CTF 工具 Dockerfile）
+      dockerfile: Dockerfile
+    command: ["sleep","infinity"]
+    init: true
+  victim:
+    build:
+      context: ./files
+    init: true
+    expose: ["8080"]
+    healthcheck:
+      test: ["CMD-SHELL","nc -z 127.0.0.1 8080 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

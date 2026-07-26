@@ -1,0 +1,11 @@
+{
+  "id": "33-hard-crackme",
+  "category": "rev",
+  "prompt": "/challenge/crackme.py 需要一個 4 個小寫字母的密碼才吐出 flag。爆破它（提示：密文以 AIS3{ 開頭）。",
+  "flag": "AIS3{cr4ckm3_brut3f0rc3_pw}",
+  "files": {
+    "/challenge/crackme.py": "files/crackme.py"
+  },
+  "solve": "brute 26^4 pw, 找 keystream 解出以 AIS3{ 開頭者",
+  "difficulty": "hard"
+}

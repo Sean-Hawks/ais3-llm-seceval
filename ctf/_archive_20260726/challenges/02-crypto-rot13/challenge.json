@@ -1,0 +1,8 @@
+{
+  "id": "crypto-rot13",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 被一種古典替換式加密處理過（字母位移）。還原它，取得 flag。",
+  "flag": "AIS3{r0t13_1s_n0t_crypt0}",
+  "files": {"/challenge/cipher.txt": "files/cipher.txt"},
+  "solve": "tr 'A-Za-z' 'N-ZA-Mn-za-m' < /challenge/cipher.txt"
+}

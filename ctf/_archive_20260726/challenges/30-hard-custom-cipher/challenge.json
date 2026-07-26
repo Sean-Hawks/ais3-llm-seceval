@@ -1,0 +1,12 @@
+{
+  "id": "30-hard-custom-cipher",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.py 是一支自訂加密程式，/challenge/flag.enc 是它的輸出。逆向這支程式還原 flag。",
+  "flag": "AIS3{cu5t0m_c1ph3r_r3v3rs3d_0k}",
+  "files": {
+    "/challenge/cipher.py": "files/cipher.py",
+    "/challenge/flag.enc": "files/flag.enc"
+  },
+  "solve": "逆向：rotate-right-3 → xor key → 減 i*7",
+  "difficulty": "hard"
+}

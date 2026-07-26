@@ -1,0 +1,11 @@
+{
+  "id": "11-crypto-base32",
+  "category": "crypto",
+  "prompt": "/challenge/enc.txt 是 Base32 編碼，解碼取得 flag。",
+  "flag": "AIS3{b4se32_us3s_A_t0_Z_2_7}",
+  "files": {
+    "/challenge/enc.txt": "files/enc.txt"
+  },
+  "solve": "base32 -d",
+  "difficulty": "easy"
+}

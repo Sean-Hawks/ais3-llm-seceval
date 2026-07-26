@@ -1,0 +1,15 @@
+{
+  "id": "C-stego-chain",
+  "category": "forensics",
+  "prompt": "/challenge/secret.jpg 藏了一個 flag。這是兩段式的：先找出隱藏的密碼，再用它取出 flag。",
+  "flag": "AIS3{2_st4g3_st3g0_ch41n}",
+  "files": {"/challenge/secret.jpg": "files/secret.jpg"},
+  "difficulty": "hard",
+  "writeup": "exiftool 讀 JPEG 的 Comment 取得 steghide 密碼 R4bb1t_h0l3，再 steghide extract -p R4bb1t_h0l3 -sf secret.jpg 取出 flag。",
+  "checkpoints": [
+    {"name": "檢視圖片 metadata", "kind": "keyword", "patterns": ["exiftool", "-Comment", "metadata", "exif"]},
+    {"name": "找到隱藏密碼", "kind": "literal", "patterns": ["R4bb1t_h0l3"]},
+    {"name": "用 steghide 抽取", "kind": "keyword", "patterns": ["steghide"]},
+    {"name": "取得 flag", "kind": "literal", "patterns": ["AIS3{2_st4g3_st3g0_ch41n}"]}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "18-crypto-rsa",
+  "category": "crypto",
+  "prompt": "RSA。/challenge/params.txt 內有 n, e, c。提示：兩個質因數很接近（Fermat 分解）。解出 flag。",
+  "flag": "AIS3{rs4_f3rm4t_cl0s3_pr1m3s}",
+  "files": {
+    "/challenge/params.txt": "files/params.txt"
+  },
+  "solve": "Fermat factor n -> d -> m=c^d mod n -> bytes",
+  "difficulty": "hard"
+}

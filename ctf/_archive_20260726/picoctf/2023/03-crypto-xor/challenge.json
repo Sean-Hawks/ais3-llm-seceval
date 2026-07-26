@@ -1,0 +1,12 @@
+{
+  "id": "03-crypto-xor",
+  "category": "crypto",
+  "prompt": "/challenge/enc.bin 被單一位元組 XOR，爆破金鑰。",
+  "flag": "picoCTF{x0r_2023}",
+  "files": {
+    "/challenge/enc.bin": "files/enc.bin"
+  },
+  "solve": "brute 0-255",
+  "difficulty": "medium",
+  "year": "2023"
+}

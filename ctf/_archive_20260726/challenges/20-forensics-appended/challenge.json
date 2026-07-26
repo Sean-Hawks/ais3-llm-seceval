@@ -1,0 +1,11 @@
+{
+  "id": "20-forensics-appended",
+  "category": "forensics",
+  "prompt": "/challenge/data.bin 亂數位元組中夾了一段 base64。用 strings 找出、再解碼。",
+  "flag": "AIS3{h1dd3n_th3n_3nc0d3d}",
+  "files": {
+    "/challenge/data.bin": "files/data.bin"
+  },
+  "solve": "strings data.bin | base64 -d",
+  "difficulty": "medium"
+}

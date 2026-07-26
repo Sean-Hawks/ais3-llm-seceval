@@ -1,0 +1,11 @@
+{
+  "id": "32-hard-multichain",
+  "category": "misc",
+  "prompt": "/challenge/blob.txt 疊了 5 層編碼、沒有任何提示。自己辨識每一層（提示：解到中途會看到某種檔案的 magic bytes）並剝到底。",
+  "flag": "AIS3{f1v3_l4y3rs_n0_h1nts}",
+  "files": {
+    "/challenge/blob.txt": "files/blob.txt"
+  },
+  "solve": "unhex → un-rot13 → un-base64 → gunzip → xor 0x2A",
+  "difficulty": "hard"
+}

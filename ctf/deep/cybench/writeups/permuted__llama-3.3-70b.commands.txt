@@ -1,0 +1,6 @@
+### [1] bash
+cat /root/source.py
+
+### [2] bash
+cat /root/output.txt
+

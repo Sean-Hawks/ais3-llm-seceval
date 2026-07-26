@@ -1,0 +1,250 @@
+### [1] bash
+cat /root/source.py /root/output.txt
+
+### [2] bash
+cat /root/output.txt
+
+### [3] python
+import ast
+
+with open('/root/output.txt', 'r') as f:
+    content = f.read()
+
+lines = content.split('\n')
+g = None
+A = None
+B = None
+c = None
+
+for line in lines:
+    if line.startswith('g = '):
+        g = ast.literal_eval(line[4:])
+    elif line.startswith('A = '):
+        A = ast.literal_eval(line[4:])
+    elif line.startswith('B = '):
+        B = ast.literal_eval(line[4:])
+    elif line.startswith('c = '):
+        # c is bytes, so it might look like c = b'\x89...'
+        # ast.literal_eval should work for bytes too
+        c = ast.literal_eval(line[4:])
+
+print(f"{g=}")
+print(f"{A=}")
+print(f"{B=}")
+print(f"{c=}")
+
+
+### [4] bash
+echo $PYTHONHASHSEED
+
+### [5] python
+import hashlib
+print(hash((1, 2, 3)))
+
+
+### [6] python
+import hashlib
+print(hash((1, 2, 3)))
+
+
+### [7] bash
+for i in {1..5}; do python3 -c "print(hash((1, 2, 3)))"; done
+
+### [8] python
+import ast
+
+def parse_file(filename):
+    with open(filename, 'r') as f:
+        content = f.read()
+    
+    lines = content.split('\n')
+    data = {}
+    for line in lines:
+        if line.startswith('g = '):
+            data['g'] = ast.literal_eval(line[4:])
+        elif line.startswith('A = '):
+            data['A'] = ast.literal_eval(line[4:])
+        elif line.startswith('B = '):
+            data['B'] = ast.literal_eval(line[4:])
+        elif line.startswith('c = '):
+            data['c'] = ast.literal_eval(line[4:])
+    return data
+
+data = parse_file('/root/output.txt')
+print(f"len(g) = {len(data['g'])}")
+print(f"len(A) = {len(data['A'])}")
+print(f"len(B) = {len(data['B'])}")
+print(f"c = {data['c']}")
+
+
+### [9] python
+import ast
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+from Crypto.Util.number import long_to_bytes
+from hashlib import sha256
+
+def parse_file(filename):
+    with open(filename, 'r') as f:
+        content = f.read()
+    
+    lines = content.split('\n')
+    data = {}
+    for line in lines:
+        if line.startswith('g = '):
+            data['g'] = ast.literal_eval(line[4:])
+        elif line.startswith('A = '):
+            data['A'] = ast.literal_eval(line[4:])
+        elif line.startswith('B = '):
+            data['B'] = ast.literal_eval(line[4:])
+        elif line.startswith('c = '):
+            data['c'] = ast.literal_eval(line[4:])
+    return data
+
+def solve():
+    data = parse_file('/root/output.txt')
+    g = data['g']
+    A = data['A']
+    B = data['B']
+    c = data['c']
+    n = len(g)
+    
+    C_mapping = [0] * n
+    visited = [False] * n
+    
+    for i in range(n):
+        if not visited[i]:
+            # Find the cycle
+            cycle = []
+            curr = i
+            while not visited[curr]:
+                visited[curr] = True
+                cycle.append(curr)
+                curr = g[curr]
+            
+            L = len(cycle)
+            # Find a_L and b_L
+            # We need to find which index in the cycle A(cycle[0]) is.
+            # But cycle[0] might not be the start of the cycle as it's a permutation.
+            # Wait, cycle is [c_0, c_1, ..., c_{L-1}] where c_{j+1} = g(c_j).
+            # So A(c_j) = c_{(j + a_L) % L}.
+            # Thus A(c_0) = c_{a_L % L}.
+            
+            # Let's find the position of A(cycle[0]) in the cycle
+            target_A = A[cycle[0]]
+            # To find the index of target_A in cycle, we can use a dictionary or just a search
+            # Since we are doing this for each cycle, a search is fine if L is not too large.
+            # But L can be up to 50,000.
+            
+            # Let's use a dictionary for the current cycle to find indices quickly
+            cycle_indices = {val: idx for idx, val in enumerate(cycle)}
+            
+            a_L = cycle_indices[target_A]
+            target_B = B[cycle[0]]
+            b_L = cycle_indices[target_B]
+            
+            for j in range(L):
+                C_mapping[cycle[j]] = cycle[(j + a_L * b_L) % L]
+                
+    sec = tuple(C_mapping)
+    sec_hash = hash(sec)
+    sec_bytes = long_to_bytes(sec_hash)
+    
+    h = sha256()
+    h.update(sec_bytes)
+    key = h.digest()[16:32]
+    iv = b"mg'g\xce\x08\xdbYN2\x89\xad\xedlY\xb9"
+    
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    try:
+        flag = unpad(cipher.decrypt(c), 16)
+        print(flag.decode())
+    except Exception as e:
+        print(f"Error decrypting: {e}")
+
+solve()
+
+
+### [10] bash
+pip install pycryptodome
+
+### [11] bash
+pip install pycryptodome --break-system-packages
+
+### [12] python
+import ast
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+from Crypto.Util.number import long_to_bytes
+from hashlib import sha256
+
+def parse_file(filename):
+    with open(filename, 'r') as f:
+        content = f.read()
+    
+    lines = content.split('\n')
+    data = {}
+    for line in lines:
+        if line.startswith('g = '):
+            data['g'] = ast.literal_eval(line[4:])
+        elif line.startswith('A = '):
+            data['A'] = ast.literal_eval(line[4:])
+        elif line.startswith('B = '):
+            data['B'] = ast.literal_eval(line[4:])
+        elif line.startswith('c = '):
+            data['c'] = ast.literal_eval(line[4:])
+    return data
+
+def solve():
+    data = parse_file('/root/output.txt')
+    g = data['g']
+    A = data['A']
+    B = data['B']
+    c = data['c']
+    n = len(g)
+    
+    C_mapping = [0] * n
+    visited = [False] * n
+    
+    for i in range(n):
+        if not visited[i]:
+            # Find the cycle
+            cycle = []
+            curr = i
+            while not visited[curr]:
+                visited[curr] = True
+                cycle.append(curr)
+                curr = g[curr]
+            
+            L = len(cycle)
+            
+            cycle_indices = {val: idx for idx, val in enumerate(cycle)}
+            
+            target_A = A[cycle[0]]
+            a_L = cycle_indices[target_A]
+            
+            target_B = B[cycle[0]]
+            b_L = cycle_indices[target_B]
+            
+            for j in range(L):
+                C_mapping[cycle[j]] = cycle[(j + a_L * b_L) % L]
+                
+    sec = tuple(C_mapping)
+    sec_hash = hash(sec)
+    sec_bytes = long_to_bytes(sec_hash)
+    
+    h = sha256()
+    h.update(sec_bytes)
+    key = h.digest()[16:32]
+    iv = b"mg'g\xce\x08\xdbYN2\x89\xad\xedlY\xb9"
+    
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    try:
+        flag = unpad(cipher.decrypt(c), 16)
+        print(flag.decode())
+    except Exception as e:
+        print(f"Error decrypting: {e}")
+
+solve()
+
+

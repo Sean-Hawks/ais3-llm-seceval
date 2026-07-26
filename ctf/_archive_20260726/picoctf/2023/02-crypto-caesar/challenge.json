@@ -1,0 +1,12 @@
+{
+  "id": "02-crypto-caesar",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 是凱撒位移，爆破 1-25。",
+  "flag": "picoCTF{c4es4r_2023}",
+  "files": {
+    "/challenge/cipher.txt": "files/cipher.txt"
+  },
+  "solve": "try 25 shifts",
+  "difficulty": "medium",
+  "year": "2023"
+}

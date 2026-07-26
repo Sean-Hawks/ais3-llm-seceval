@@ -1,0 +1,8 @@
+{
+  "id": "rev-python",
+  "category": "rev",
+  "prompt": "/challenge/reveal.py 執行後會印出 flag，你也可以直接讀原始碼把它拼回來。",
+  "flag": "AIS3{r3ad_th3_s0urc3}",
+  "files": {"/challenge/reveal.py": "files/reveal.py"},
+  "solve": "python3 /challenge/reveal.py"
+}

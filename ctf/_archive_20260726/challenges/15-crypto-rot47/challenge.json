@@ -1,0 +1,11 @@
+{
+  "id": "15-crypto-rot47",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 用 ROT47 處理（涵蓋可見 ASCII，含符號）。",
+  "flag": "AIS3{r0t47_c0v3rs_symb0ls}",
+  "files": {
+    "/challenge/cipher.txt": "files/cipher.txt"
+  },
+  "solve": "rot47 (self-inverse)",
+  "difficulty": "medium"
+}

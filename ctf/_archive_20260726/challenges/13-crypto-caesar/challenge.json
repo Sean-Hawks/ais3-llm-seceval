@@ -1,0 +1,11 @@
+{
+  "id": "13-crypto-caesar",
+  "category": "crypto",
+  "prompt": "/challenge/cipher.txt 是凱撒位移加密（位移量未知，請爆破 1-25）。",
+  "flag": "AIS3{c43sar_sh1ft_s3v3n}",
+  "files": {
+    "/challenge/cipher.txt": "files/cipher.txt"
+  },
+  "solve": "try all 25 shifts",
+  "difficulty": "medium"
+}

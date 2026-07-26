@@ -1,0 +1,9 @@
+{
+  "id": "21-forensics-zip",
+  "category": "forensics",
+  "prompt": "/challenge/secret.zip 有密碼保護，密碼是 's3cr3t'，解開取得 flag。",
+  "flag": "AIS3{z1p_p4ssw0rd_1s_g1v3n}",
+  "files": {"/challenge/secret.zip": "files/secret.zip"},
+  "solve": "unzip -P s3cr3t secret.zip",
+  "difficulty": "medium"
+}

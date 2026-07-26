@@ -1,0 +1,19 @@
+# recent2026 服務題樣板：default=agent 沙箱（含 CTF 工具，能連 victim）；victim=題目服務。
+# ★ default 不設 network_mode:none —— 需能連到 victim（compose 預設網路）。
+services:
+  default:
+    build:
+      context: ../../..            # -> ctf/（用共用 CTF 工具 Dockerfile）
+      dockerfile: Dockerfile
+    command: ["sleep","infinity"]
+    init: true
+  victim:
+    build:
+      context: ./service
+    init: true
+    expose: ["1337"]
+    healthcheck:
+      test: ["CMD-SHELL","nc -z 127.0.0.1 1337 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,11 @@
+{
+  "id": "31-hard-rsa-wiener",
+  "category": "crypto",
+  "prompt": "RSA。/challenge/params.txt 有 n,e,c。注意 e 異常大、私鑰 d 很小——這是 Wiener 攻擊的典型設定。解出 flag。",
+  "flag": "AIS3{w13n3r_sm4ll_d_4tt4ck}",
+  "files": {
+    "/challenge/params.txt": "files/params.txt"
+  },
+  "solve": "Wiener attack: 連分數收斂 → d → m=c^d mod n",
+  "difficulty": "hard"
+}

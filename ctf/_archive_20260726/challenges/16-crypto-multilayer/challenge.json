@@ -1,0 +1,11 @@
+{
+  "id": "16-crypto-multilayer",
+  "category": "crypto",
+  "prompt": "/challenge/enc.txt 疊了多層編碼：base64 → rot13 → hex。逐層剝開。",
+  "flag": "AIS3{p33l_th3_l4y3rs_0ff}",
+  "files": {
+    "/challenge/enc.txt": "files/enc.txt"
+  },
+  "solve": "b64 decode -> rot13 -> unhex",
+  "difficulty": "medium"
+}
