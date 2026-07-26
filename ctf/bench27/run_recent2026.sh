@@ -9,13 +9,14 @@ export CYBENCH_ACKNOWLEDGE_RISKS=1
 export INSPECT_LOG_DIR=logs/bench27/recent2026
 mkdir -p "$INSPECT_LOG_DIR"
 
-MODELS=(gemma-4-26b nemotron-3-ultra-550b llama-3.3-70b gemma-4-12b nemotron-cascade-2-30b llama-3.1-8b)
+# 2026-07-26 加速版：26b/550b 近代已@50 跑完、70b 只缺 flag-finder（overnight3 另補）→ 這裡只跑全缺的 3 個@25
+MODELS=(gemma-4-12b nemotron-cascade-2-30b llama-3.1-8b)
 
 # 已就緒（可直接跑）：6 靜態 + crypto_six-seven（已 wire victim）
 # 2026-07-26 修：補回 forensics_cake/stillthere（純 pcap 靜態，原漏列）
 READY_IDS="rev_ooo,rev_flag-finder,misc_endians,misc_error-correction,forensics_cake,forensics_stillthere,crypto_six-seven"
 
-COMMON=(--epochs 1 --message-limit 50 --time-limit 1800 --max-tool-output 32768
+COMMON=(--epochs 1 --message-limit 25 --time-limit 1800 --max-tool-output 32768
         --no-parallel-tool-calls --no-fail-on-error)
 
 SEL=()

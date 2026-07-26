@@ -1,124 +1,110 @@
-# Inspect AI 冒煙測試
+# ais3-llm-seceval
 
-目標：用最小的例子，確認 Inspect 能連上 AIS3 的 endpoint 並跑完一次評測。
+**語言模型資安能力評量的方法設計** — 一套以 [Inspect AI](https://inspect.aisi.org.uk/) 為骨幹、針對「污染」問題設計的 LLM 資安（CTF）能力評測 harness。
 
-## 0. 跨環境需求（Linux / macOS / Windows）
+> A methodology and harness for evaluating the cybersecurity capabilities of language models, built around an explicit **contamination-control** design. Developed as the AI-track capstone project for Taiwan's **AIS3 2026** summer program.
 
-- **Python 3.12–3.14**（3.14 可用，但某些套件在 3.14 可能還沒 wheel；裝不起來就退 3.12）。
-- **Docker**：CTF agentic 評測（cybench / intercode / 自製沙箱）**一定要 Docker**，且容器都是 Linux image。
-  - Linux：原生最順，直接裝 docker engine。
-  - macOS：Docker Desktop。
-  - Windows：**必須用 WSL2**——`.sh` 腳本與 Linux 容器在原生 PowerShell 跑不了，請在 WSL2 (Ubuntu) 裡 clone、建 venv、跑 Docker Desktop 的 WSL2 backend。
-- **連得到 AIS3 gateway**：受測模型走 `.env` 裡的 OpenAI-compatible endpoint，換環境後要先確認網路到得了（這才是真正的移植關卡，跟 OS 無關）。
+---
 
-## 1. 裝環境（建議用 venv，別汙染系統 Python）
+## 這個專案在回答什麼問題
 
-```bash
-git clone <this-repo-url> && cd ais3-llm-seceval
-python3 -m venv .venv
-source .venv/bin/activate          # Windows(WSL2) 一樣用這行；純 PowerShell 是 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt    # 完整鎖定版本；只想跑 MCQ 冒煙可改 pip install inspect-ai
+「一個語言模型在資安任務（CTF）上得高分，到底是**真的會**，還是**背過答案**？」
+
+公開 CTF 題目幾乎必然帶有公開 writeup，極可能已進入模型訓練資料。單純跑一批公開題、報一個 accuracy，量到的可能只是**背誦（recall）**而非**能力（capability）**。本專案的核心貢獻是一套**把污染變成可量測對照軸**的評測方法，並以一組實測模型驗證。
+
+## 方法主幹（不論題組如何變都成立）
+
+- **抗污染三層**：① 有洞版 vs 修補版的**對照配對**（量假陽性率）② 沙箱可執行的 **pass/fail** ③ 時間污染 gap（僅輔助，不單押）。
+- **統一 harness**：全部走 Inspect AI，組態固定並寫入報告（harness 設定會直接影響分數，見下方發現）。
+- **統計效度**：每題 ≥5 次跑 + 95% CI；題數 ≥50 才有鑑別力（n=5 時 stderr≈0.2）。
+- **嚴謹評分**：以 `exact_flag()`（提交的 flag-token 集合須**恰等於**正解）取代上游常見的 `includes()` 子字串比對，阻擋「候選答案轟炸」這類 reward hacking。
+- **雙軸評估**：不只 accuracy，另計 **Intuition Index**（II = 100 / 解題中位步數），量「準」與「廣」之外的「直覺強度」。實測發現 II 與 accuracy **解耦**（例：某模型「準但窄」、某模型「廣但亂」）。
+
+> ⚠️ **科學限制（貫穿全專案的立場）**：單靠「訓練截止後的新 CVE / temporal holdout」不可靠——CVE ≠ 0-day（exploit 常先外流）、且時間訊號可被題目改寫抹除。因此污染訊號**必須**與各階段標準解 checkpoint 的語意命中並用；抗污染泛化的主張只由對照配對＋自製私有題支撐。
+
+## Bench27 — 污染對照 × 深度標準解題組
+
+主要評測題組，27 題分三區合看（詳見 [`ctf/bench27/README.md`](ctf/bench27/README.md)）：
+
+| 分區 | 題數 | 年份／來源 | 測什麼 |
+|---|---|---|---|
+| **contaminated** | 12 | 2022–2023（picoCTF／cybench）| writeup 幾乎必進訓練資料 → **recall** |
+| **recent2026** | 12 | 真實 2026 CTF（post-cutoff）| 未污染 → **真實能力** |
+| **deep_hard** | 3 | cybench（HTB-2024／Sekai）| 多階段硬題，checkpoint 有 headroom |
+
+**核心對照**：同一模型在 contaminated 與 recent2026 的表現差（gap）＝污染訊號。每題附 `README.md`＋`writeup.md`＋`checkpoints.json`（各階段 milestone 語意 + 客觀錨點/中間值），供詞向量比對與部分分。
+
+## 受測模型
+
+官方提供的 7 個 OpenAI-compatible 模型，構成 8B → 550B 的 scaling 階梯：
+
+```
+llama-3.1-8b · gemma-4-12b · gemma-4-26b · nemotron-cascade-2-30b
+llama-3.3-70b · nemotron-3-ultra-550b            （llama-guard-3-8b 作安全評分員，不進解題評測）
 ```
 
-> Python 3.14 太新，萬一某個相依套件沒有 wheel 裝不起來，改用 3.12：
-> `python3.12 -m venv .venv`（或 `brew install python@3.12`）。
->
-> 依賴清單由 `pip freeze` 產生於 `requirements.txt`。`.env` **不會**進版控（含真實憑證），請 `cp .env.example .env` 後自行填。
+## 快速開始
 
-## 2. 設定 endpoint
-
-把 `.env.example` 複製成 `.env`，填入你的網址與 key：
+完整設定（跨 OS、Docker、endpoint、疑難排解）見 **[`docs/SETUP.md`](docs/SETUP.md)**。最小路徑：
 
 ```bash
-cp .env.example .env
-# 然後編輯 .env
-```
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env          # 填入你的 OpenAI-compatible endpoint 與 key
 
-- `AIS3_BASE_URL`：OpenAI-compatible 根網址，**通常要以 `/v1` 結尾**。
-- `AIS3_API_KEY`：沒有驗證的話填 `dummy` 之類的非空字串即可。
-
-## 3. 跑第一次
-
-```bash
+# MCQ 冒煙：確認能連上 endpoint 並跑完一次評測
 inspect eval smoke_test.py --model openai-api/ais3/ais3/llama-3.1-8b --limit 6
+
+# Bench27 污染組（需 Docker）
+bash ctf/bench27/run_contaminated.sh
 ```
 
-模型字串規則：`openai-api/<provider>/<model>`
+> 所有評測都必須從本目錄執行（Inspect 會自動讀取同目錄的 `.env`）。CTF agentic 評測需要 Docker。
 
-- `<provider>` = `ais3`（對應 `AIS3_BASE_URL` / `AIS3_API_KEY` 這組前綴，名字自取）。
-- `<model>` = **gateway 真正的模型 ID**，已確認是帶前綴的 `ais3/llama-3.1-8b`。
-- 所以完整字串 `ais3` 會出現兩次：`openai-api/ais3/ais3/llama-3.1-8b`（前者是本地 provider 名，後者是 gateway 模型前綴）。這不是筆誤。
-
-## 4. 看結果
-
-```bash
-inspect view
-```
-
-會開一個本機網頁，逐題看「輸入 / 模型輸出 / 對錯 / 分數」。這就是 Inspect 最好用的地方——每一題都可追。
-
-## 5. 一次比較多個模型（你的 scaling 階梯）
-
-```bash
-for m in ais3/llama-3.1-8b ais3/gemma-4-12b ais3/gemma-4-26b ais3/nemotron-cascade-2-30b ais3/llama-3.3-70b ais3/nemotron-3-ultra-550b; do
-  inspect eval smoke_test.py --model openai-api/ais3/$m --limit 6
-done
-inspect view
-```
-
-> `llama-guard-3-8b` 是安全分類器、不是對話模型，別放進這個 MCQ 迴圈——它之後要當「安全評分員」用。
-
-## 疑難排解
-
-- **連不上 / 401**：檢查 `AIS3_BASE_URL` 有沒有 `/v1`、key 是否正確。先用 `curl` 確認 endpoint 本身會回：
-
-  ```bash
-  curl $AIS3_BASE_URL/models -H "Authorization: Bearer $AIS3_API_KEY"
-  ```
-
-- **model not found**：`<model>` 字串要跟 gateway 完全一致（見步驟 3）。
-- **看不到分數**：確認跑完沒報錯，再 `inspect view`。
-
----
-
-跑通這個之後，下一步就是把 `smoke_test.py` 換成**對照配對**的漏洞偵測（有洞版 vs 修補版 + paired-correct 評分），那才是你們 BR-B 的「尺」。要我接著寫那一版跟我說。
-
----
-
-# 專案結構總覽
+## 儲存庫結構
 
 ```
-inspect-test/
-├── .env / .env.example        endpoint 設定（AIS3_BASE_URL / AIS3_API_KEY）
-├── README.md                  ← 本檔（設定指南 + 結構總覽）
+.
+├── README.md                  ← 本檔（專案總覽）
+├── docs/SETUP.md              安裝與環境設定指南（原 quickstart）
+├── skills.md                  操作手冊 / 方法論參考（團隊可照跑）
 ├── smoke_test.py              MCQ 冒煙測試（sec-smoke task）
-├── skills.md                  筆記
-├── logs/                      ★ inspect 預設輸出目錄（新 eval 都寫這裡，平面結構）
-│   └── _archive/                已歸檔的過時 log（sec-smoke 冒煙、被取代的 ctf-deep）
+├── requirements.txt           鎖定版本依賴
+├── LICENSE                    MIT（程式碼）
+├── THIRD_PARTY_NOTICES.md     第三方題目與工具的來源與授權標註
 └── ctf/                       CTF agentic 評測主體
-    ├── ctf_eval.py            task 定義：ctf() / ctf_pico() / ctf_deep()
-    ├── compose.yaml + Dockerfile   共用 Docker 沙箱（自製工具：strings/steghide/pwntools…）
-    ├── analyze_by_year.py     讀 ../logs 做 2023/2026 污染 gap 分析
-    ├── intuition.py           讀 ../logs 算 Intuition Index（II=100/中位步數）
-    ├── challenges/            自製題 01–33（含硬題 30-33）→ ctf()
-    ├── picoctf/{2023,2026}/   年份對照組 → ctf_pico()
-    ├── bench25/               25 題全領域藍圖（規劃文件：manifest/inventory/run）
-    ├── deep/                  深度題（推理路徑分析）
-    │   ├── A-rsa-wiener/ B-z3-crackme/ C-stego-chain/   舊自製深度題 → ctf_deep()
-    │   ├── deep.zip           ↑ 這三題的舊備份（可刪）
-    │   └── cybench/           ★ cybench 真題 case study（見其 README）
-    └── logs 由頂層 ../logs 統一存放（ctf/ 內不另存）
+    ├── README.md              迷你 CTF 評測（agentic + Docker 沙箱）說明
+    ├── DATA_PROVENANCE.md     題目資料完整溯源（逐題出處／上游版本）
+    ├── bench27/               ★ 主題組：contaminated / recent2026 / deep_hard
+    ├── deep/                  深度題與 cybench case study（推理路徑分析）
+    └── _archive_20260726/     早期題組封存（Bench25 等，保留供溯源）
 ```
 
-## 各 task 怎麼跑（都從 `inspect-test/` 跑才讀得到 `.env`）
-| 指令 | 內容 |
-|---|---|
-| `inspect eval smoke_test.py` | MCQ 冒煙 |
-| `inspect eval ctf/ctf_eval.py@ctf` | 自製題 01–33 |
-| `inspect eval ctf/ctf_eval.py@ctf_pico` | picoCTF 年份對照組 |
-| `inspect eval ctf/ctf_eval.py@ctf_deep` | 舊自製深度題 A/B/C（checkpoint 部分分） |
-| `ctf/deep/cybench/run_and_writeup.sh <model>` | cybench 深度 case study（一鍵跑+匯出 writeup） |
+## 實測到的方法論發現（皆有 log 佐證，寫入報告用）
 
-## logs 的原則
-`logs/` 是 inspect 原生輸出，**新 eval 一定會寫回這裡的平面結構**，所以刻意不切子資料夾（會被下次跑打散、且 `analyze_by_year.py`/`intuition.py` 用非遞迴 glob 讀）。只把明顯過時的挪進 `logs/_archive/`。
-例外：cybench case study 的 log 獨立存在 `ctf/deep/cybench/logs/`，由它自己的腳本管理。
+1. **Harness confound**：真 picoCTF forensics 題因沙箱缺 `steghide`/`xxd` 而**假性失敗**；補工具後同一模型分數上升——分數會被 harness 設定左右，故組態必須固定並揭露。
+2. **非確定性**：同題同模型不同次結果會變 → 每題 ≥5 次 + CI 是必要而非奢侈。
+3. **「無解題」是最貴的題**：agentic 評測的牆鐘由「解不出來卻一直嘗試」的題主導，越強的模型越會多試分解法而更慢——時間成本不由題數決定。
+4. **Gateway 序列化 / 排隊偽裝成慢**：診斷速度要看 `working_time` 而非 `total_time`；共享 gateway 下多個 eval 不能併行取分（弱模型會被吞吐餓死）。
+5. **子字串評分是上界**：cybench 與 gdm_intercode_ctf 上游皆用 `includes()`，其分數是能力上界，**不可**與本專案 `exact_flag` 的自製題結果並列比較。
+
+## 誠實框定與限制
+
+- **污染組屬已知且不可迴避的污染**：全部有公開 writeup，分數僅代表「已知污染下的領域覆蓋／工具使用／端到端成功率／粗略排名」，**不得**解讀為未見題泛化。
+- **Frontier 手解參考點非盲測能力分**：以 frontier 模型（Opus）手解 27 題，作為 checkpoint 覆蓋與路徑比對的**上緣參考錨點**，出題方持 ground truth，非盲測分數。
+- 難度標籤為相對估計、未跨來源校準；部分題的沙箱可解性需另行驗證。
+
+完整限制聲明見 [`ctf/DATA_PROVENANCE.md`](ctf/DATA_PROVENANCE.md) §5。
+
+## 資料來源與第三方內容
+
+本題組的 CTF 題檔與參考 writeup **多數並非本專案自製**，而是選自公開學術 benchmark（InterCode-CTF、Cybench）與公開 CTF 賽事歸檔（LACTF 2026、BYUCTF 2026 等）。所有第三方內容的出處、上游 repo 與授權條款見 **[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)** 與 **[`ctf/DATA_PROVENANCE.md`](ctf/DATA_PROVENANCE.md)**。各題原檔皆保留並標註來源。
+
+## 授權
+
+本專案**自有的**程式碼、評測設計、checkpoints 與文件以 **MIT** 授權（見 [`LICENSE`](LICENSE)）。
+第三方 CTF 題檔與 writeup 各自受其上游授權／賽事條款約束，**不**在本專案的 MIT 授權範圍內——詳見 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+
+---
+
+*AIS3 2026 AI 組專題 — 語言模型資安能力評量的方法設計。憑證（`.env`）永不進版控。*

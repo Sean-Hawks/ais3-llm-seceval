@@ -16,9 +16,13 @@ logs/
 logs_archive_*/
 *.eval
 
-# --- Archives / caches ---
+# --- Archives / caches (regenerable bundles; keep the loose files, not the tarball) ---
 *.zip
+*.tar.gz
 .DS_Store
+
+# --- Working artifacts (large / regenerable; not part of the published set) ---
+**/transcripts/
 
 # --- OS / editor ---
 Thumbs.db
