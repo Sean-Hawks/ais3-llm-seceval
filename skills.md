@@ -8,7 +8,7 @@
 
 | 項目 | 內容 |
 |---|---|
-| 目錄 | `/Users/hawks/Documents/AIS3/inspect-test/` |
+| 目錄 | `/path/to/ais3-llm-seceval/` |
 | Python | 3.14（venv：`.venv/`）|
 | 套件 | `inspect_ai 0.3.249`, `inspect-evals 0.16`, `z3-solver` |
 | 憑證 | `.env`（`AIS3_BASE_URL`, `AIS3_API_KEY`）Inspect 自動讀 |
@@ -16,7 +16,7 @@
 
 **啟動**：
 ```bash
-cd /Users/hawks/Documents/AIS3/inspect-test && source .venv/bin/activate
+cd /path/to/ais3-llm-seceval && source .venv/bin/activate
 ```
 
 **受測 7 模型**（`llama-guard-3-8b` 是分類器、當安全評分員，不進對話評測）：

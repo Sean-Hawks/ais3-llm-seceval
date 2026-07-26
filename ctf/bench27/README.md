@@ -56,7 +56,7 @@
 一切從 `inspect-test/` 跑（會自動讀 `.env` 憑證）。三個分區各一支腳本：
 
 ```bash
-cd /Users/hawks/Documents/AIS3/inspect-test
+cd /path/to/ais3-llm-seceval
 
 # 污染 12 題 × 6 模型（現成 harness：gdm_intercode_ctf + cybench）
 bash ctf/bench27/run_contaminated.sh

@@ -21,7 +21,7 @@ flag 都是自製、無真實 exploit，容器 `network_mode: none` 完全斷網
 ★ **一定要從 `inspect-test/` 目錄跑**（才會自動讀 `.env` 的 `AIS3_` 憑證）：
 
 ```bash
-cd /Users/hawks/Documents/AIS3/inspect-test
+cd /path/to/ais3-llm-seceval
 source .venv/bin/activate
 
 # 單一模型（CTF 建議用大模型；小模型幾乎解不動）

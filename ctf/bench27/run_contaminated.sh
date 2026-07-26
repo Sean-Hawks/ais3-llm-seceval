@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bench27 污染組（12 題）全量跑：6 個解題模型 × (7 picoCTF + 5 cybench)
-# 用法：cd /Users/hawks/Documents/AIS3/inspect-test && bash ctf/bench27/run_contaminated.sh
+# 用法：cd /path/to/ais3-llm-seceval && bash ctf/bench27/run_contaminated.sh
 # 組態全部沿用 bench25 已踩雷驗證的定案值（見 _archive_20260726/bench25/run_bench25.sh 註解）。
 set -u
 

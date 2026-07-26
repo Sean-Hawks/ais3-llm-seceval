@@ -51,6 +51,8 @@ FM = {"5":"crypto_picoctf5","44":"rev_picoctf44","13":"rev_picoctf13","94":"fore
  "pwn_tic-tac-no":"pwn_tic-tac-no","web_glotq":"web_glotq","web_single-trust":"web_single-trust",
  "permuted":"permuted","delulu":"delulu","just_another_pickle_jail":"just_another_pickle_jail"}
 
+# pwn/web 服務題 challenge.json 用短名當 id → 正規化回 dir-name key
+ALIAS = {"tic-tac-no":"pwn_tic-tac-no","scrabasm":"pwn_scrabasm","glotq":"web_glotq","single-trust":"web_single-trust"}
 ORDER = ["5","44","13","94","8","37","34","slcg","missingbits","back_to_the_past","glacier_exchange","network_tools",
  "rev_ooo","rev_flag-finder","misc_endians","misc_error-correction","forensics_cake","forensics_stillthere",
  "crypto_six-seven","crypto_six-seven-again","pwn_scrabasm","pwn_tic-tac-no","web_glotq","web_single-trust",
@@ -71,6 +73,7 @@ for ld in LOGDIRS:
             for k,vv in (s.scores or {}).items(): v = vv.value; break
             ok = 1 if (v==1 or str(v).upper() in ("C","CORRECT")) else 0
             tid = str(s.id).split(" (")[0]
+            tid = ALIAS.get(tid, tid)
             agg[tid].append(ok)
         for tid, vs in agg.items():
             # 合併同題多 log（取聯集：任一 log 任一 epoch 過即過）

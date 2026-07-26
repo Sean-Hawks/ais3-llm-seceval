@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bench25 結果分析：合併 cybench + intercode 兩段 log，輸出跨模型 × 領域 × 難度矩陣。
 
-用法：cd /Users/hawks/Documents/AIS3/inspect-test && python ctf/bench25/analyze_bench25.py
+用法：cd /path/to/ais3-llm-seceval && python ctf/bench25/analyze_bench25.py
 """
 import json
 import math

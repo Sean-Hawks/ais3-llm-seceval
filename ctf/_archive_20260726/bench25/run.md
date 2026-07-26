@@ -3,7 +3,7 @@
 所有指令都要從專案根目錄執行，否則 Inspect 不一定會讀到這裡的 `.env`。
 
 ```bash
-cd /Users/hawks/Documents/AIS3/inspect-test
+cd /path/to/ais3-llm-seceval
 source .venv/bin/activate
 docker info >/dev/null
 ```

@@ -12,7 +12,7 @@
 ## Inputs examined (files/ only)
 
 The challenge dir has no local `files/`; the challenge inputs live in the cybench package at
-`/Users/hawks/Documents/AIS3/inspect-test/.venv/lib/python3.14/site-packages/inspect_evals/cybench/challenges/slcg/resources/`.
+`/path/to/ais3-llm-seceval/.venv/lib/python3.14/site-packages/inspect_evals/cybench/challenges/slcg/resources/`.
 I read ONLY the two participant-facing inputs there (avoided `solution/`):
 - `resources/encrypt.py` — the cipher source.
 - `resources/ciphertext.txt` — `ct = [...]`, 364 integers = 52 chars × 7 bits.

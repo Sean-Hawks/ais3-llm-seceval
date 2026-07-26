@@ -27,7 +27,7 @@ cybench/
 ## 一鍵跑（跑一次 → 出 writeup + 指令）
 須從 `inspect-test/` 有 `.env`、Docker 開著、已 `pip install inspect_cyber`。
 ```bash
-cd /Users/hawks/Documents/AIS3/inspect-test
+cd /path/to/ais3-llm-seceval
 ctf/deep/cybench/run_and_writeup.sh gemma-4-26b                 # 3 題一次
 ctf/deep/cybench/run_and_writeup.sh nemotron-3-ultra-550b permuted,delulu   # 指定子集
 ```

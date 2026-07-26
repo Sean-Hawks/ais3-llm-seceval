@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bench25 全量正式跑：6 個解題模型 × 25 題
-# 用法：cd /Users/hawks/Documents/AIS3/inspect-test && bash ctf/bench25/run_bench25.sh
+# 用法：cd /path/to/ais3-llm-seceval && bash ctf/bench25/run_bench25.sh
 set -u
 
 cd "$(dirname "$0")/../.." || exit 1

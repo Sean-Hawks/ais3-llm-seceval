@@ -8,7 +8,8 @@ export CYBENCH_ACKNOWLEDGE_RISKS=1
 export INSPECT_LOG_DIR=logs/bench27/recent2026
 mkdir -p "$INSPECT_LOG_DIR"
 MODELS=(gemma-4-26b nemotron-3-ultra-550b llama-3.3-70b gemma-4-12b nemotron-cascade-2-30b llama-3.1-8b)
-SERVICE_IDS="crypto_six-seven-again,pwn_tic-tac-no,pwn_scrabasm,web_glotq,web_single-trust"
+# 注意：pwn/web 這 4 題 challenge.json 的 id 是短名（非 dir 名），loader 以短名為 sample id
+SERVICE_IDS="crypto_six-seven-again,tic-tac-no,scrabasm,glotq,single-trust"
 COMMON=(--epochs 1 --message-limit 25 --time-limit 1800 --max-tool-output 32768
         --no-parallel-tool-calls --no-fail-on-error --max-samples 2)
 echo "=== recent2026 服務題開始 $(date '+%F %T') ==="

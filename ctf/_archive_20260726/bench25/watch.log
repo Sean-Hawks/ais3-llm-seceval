@@ -16,8 +16,8 @@
 [2026-07-26 00:15:49] 進度：1/12 個 (模型 × 階段) 完成　|　跑批進行中 → ctf/bench25/RESULTS.md
 [2026-07-26 00:18:50] 進度：1/12 個 (模型 × 階段) 完成　|　跑批進行中 → ctf/bench25/RESULTS.md
 Traceback (most recent call last):
-  File "/Users/hawks/Documents/AIS3/inspect-test/ctf/bench25/analyze_bench25.py", line 353, in <module>
-  File "/Users/hawks/Documents/AIS3/inspect-test/ctf/bench25/analyze_bench25.py", line 336, in once
+  File "/path/to/ais3-llm-seceval/ctf/bench25/analyze_bench25.py", line 353, in <module>
+  File "/path/to/ais3-llm-seceval/ctf/bench25/analyze_bench25.py", line 336, in once
   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 809, in write_text
     with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
