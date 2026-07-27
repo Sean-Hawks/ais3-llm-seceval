@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """每個受測模型『實際解題』的完整 wp：推理 + 下的指令 + 工具輸出 + 提交/flag。
-與標準解答 wp_24/ 平行，命名一致。輸出 agent_wp/<清楚題名>/<model>.md（含所有 epoch）。
+與標準解答 wp_27/ 平行，命名一致。輸出 agent_wp/<清楚題名>/<model>.md（含所有 epoch）。
 工具輸出過長會截斷（預設 1600 字/則）以保可讀。"""
 import glob, os, json, collections
 from inspect_ai.log import read_eval_log
@@ -8,13 +8,13 @@ from inspect_ai.log import read_eval_log
 ROOT = os.path.dirname(os.path.abspath(__file__))
 INSPECT_ROOT = os.path.abspath(os.path.join(ROOT, "../.."))
 OUT = os.path.join(ROOT, "agent_wp")
-LOGDIRS = ["logs/bench27/contaminated", "logs/bench27/recent2026"]  # 24 題（deep 另計）
+LOGDIRS = ["logs/bench27/contaminated", "logs/bench27/recent2026", "logs/bench27/deep_hard"]  # 27 題
 TOOL_TRUNC = 1600
 
 SH = {"nemotron-3-ultra-550b":"550b","gemma-4-26b":"26b","gemma-4-12b":"12b",
       "nemotron-cascade-2-30b":"30b","llama-3.3-70b":"70b","llama-3.1-8b":"8b"}
 ALIAS = {"tic-tac-no":"pwn_tic-tac-no","scrabasm":"pwn_scrabasm","glotq":"web_glotq","single-trust":"web_single-trust"}
-# tid -> (arm, 清楚題名)  對齊 wp_24
+# tid -> (arm, 清楚題名)  對齊 wp_27
 CLEAR = {
  "5":("contaminated","C01_crypto_ROT13"),"slcg":("contaminated","C02_crypto_sequential-LCG"),
  "missingbits":("contaminated","C03_crypto_RSA-missing-bits"),"44":("contaminated","C04_rev_VaultDoor-char-mapping"),
@@ -29,6 +29,8 @@ CLEAR = {
  "misc_endians":("recent2026","R07_misc_utf16-endianness"),"misc_error-correction":("recent2026","R08_misc_QR-reed-solomon-rebuild"),
  "web_glotq":("recent2026","R09_web_go-parser-differential"),"web_single-trust":("recent2026","R10_web_AES-GCM-short-tag"),
  "pwn_tic-tac-no":("recent2026","R11_pwn_OOB-global-write"),"pwn_scrabasm":("recent2026","R12_pwn_shellcode-PRNG"),
+ "permuted":("deep_hard","D01_crypto_permutation-group-DLP"),"delulu":("deep_hard","D02_pwn_format-string-overwrite"),
+ "just_another_pickle_jail":("deep_hard","D03_misc_pickle-jail-escape"),
 }
 
 def render_epoch(s, ep, solved, target):
@@ -79,7 +81,7 @@ for tid,(arm,clear) in CLEAR.items():
         per_model_solved[m]=(nsolv,len(runs))
         head=(f"# {clear} — {m} 實際解題 wp\n\n"
               f"題目：{arm} / `{tid}`　·　此模型 {nsolv}/{len(runs)} epoch 解出　·　"
-              f"標準解答見 `../../wp_24/{clear}.md`\n\n"
+              f"標準解答見 `../../wp_27/{clear}.md`\n\n"
               f"> 內容＝模型自己的推理＋下的指令＋工具輸出（過長截斷）＋提交。\n\n---\n\n")
         body="\n\n---\n\n".join(md for _,_,md in runs) or "（此模型無 run 紀錄）"
         open(os.path.join(d, f"{m}.md"),"w",encoding="utf-8").write(head+body)
@@ -87,13 +89,13 @@ for tid,(arm,clear) in CLEAR.items():
     idx.append((clear, arm, tid, per_model_solved))
 
 with open(os.path.join(OUT,"INDEX.md"),"w",encoding="utf-8") as f:
-    f.write("# Bench27 — Agent 實際解題 wp（24 題 × 6 模型）\n\n")
+    f.write("# Bench27 — Agent 實際解題 wp（27 題 × 6 模型）\n\n")
     f.write("每題資料夾 `<清楚題名>/<model>.md`＝該模型**自己跑出來**的完整解題過程")
-    f.write("（推理＋指令＋輸出＋提交）。標準解答對照見 `../wp_24/`。\n\n")
+    f.write("（推理＋指令＋輸出＋提交）。標準解答對照見 `../wp_27/`。\n\n")
     f.write("格子＝該模型解出 epoch 數 / 5。\n\n")
     f.write("| 題 | "+" | ".join(MODELS6)+" |\n|---|"+"---|"*6+"\n")
     for clear,arm,tid,pms in idx:
         cells=" | ".join(f"{pms[m][0]}/{pms[m][1]}" for m in MODELS6)
         f.write(f"| `{clear}` | {cells} |\n")
 
-print(f"寫出 {n_files} 篇 agent wp（24 題 × 6 模型）→ {OUT}/  + INDEX.md")
+print(f"寫出 {n_files} 篇 agent wp（27 題 × 6 模型）→ {OUT}/  + INDEX.md")

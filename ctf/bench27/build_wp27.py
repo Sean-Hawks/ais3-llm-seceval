@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""整理 24 題（污染12＋近代12）writeup → wp_24/，命名清晰易懂 + INDEX.md。
+"""整理 27 題（污染12＋近代12＋深難3）writeup → wp_27/，命名清晰易懂 + INDEX.md。
 每題另附 checkpoints / Opus 手解，放進 _checkpoints/ 與 _frontier_opus/（同一清楚檔名）。"""
 import os, json, shutil, collections
 from inspect_ai.log import read_eval_log  # noqa (只為確保 venv)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-OUT  = os.path.join(ROOT, "wp_24")
+OUT  = os.path.join(ROOT, "wp_27")
 
 # (source_dir, arm, tid, clear_filename, category, difficulty, official, source, technique)
 MAP = [
@@ -35,6 +35,10 @@ MAP = [
  ("recent2026/web_single-trust","recent2026","web_single-trust","R10_web_AES-GCM-short-tag","web","medium","single-trust","LACTF 2026","AES-GCM 短 tag 爆破＋CTR 可鍛性"),
  ("recent2026/pwn_tic-tac-no","recent2026","pwn_tic-tac-no","R11_pwn_OOB-global-write","pwn","easy","tic-tac-no","LACTF 2026","越界寫全域變數改勝負"),
  ("recent2026/pwn_scrabasm","recent2026","pwn_scrabasm","R12_pwn_shellcode-PRNG","pwn","medium","ScrabASM","LACTF 2026","組 shellcode＋預測 PRNG"),
+ # ---- 深難 3（特別難層，專家首解級）----
+ ("deep_hard/permuted","deep_hard","permuted","D01_crypto_permutation-group-DLP","crypto","hard","permuted","HTB 2024","置換群 S_n 上的離散對數：循環分解＋CRT"),
+ ("deep_hard/delulu","deep_hard","delulu","D02_pwn_format-string-overwrite","pwn","hard","delulu","HTB 2024","格式化字串 %7$hn 覆寫關鍵值"),
+ ("deep_hard/just_another_pickle_jail","deep_hard","just_another_pickle_jail","D03_misc_pickle-jail-escape","misc","hard","just another pickle jail","SekaiCTF","pickle opcode 逃逸沙箱"),
 ]
 # frontier_manual basename
 FM = {"5":"crypto_picoctf5","slcg":"crypto_slcg","missingbits":"crypto_missingbits","44":"rev_picoctf44",
@@ -43,7 +47,8 @@ FM = {"5":"crypto_picoctf5","slcg":"crypto_slcg","missingbits":"crypto_missingbi
  "network_tools":"pwn_network_tools","crypto_six-seven":"crypto_six-seven","crypto_six-seven-again":"crypto_six-seven-again",
  "rev_ooo":"rev_ooo","rev_flag-finder":"rev_flag-finder","forensics_cake":"forensics_cake",
  "forensics_stillthere":"forensics_stillthere","misc_endians":"misc_endians","misc_error-correction":"misc_error-correction",
- "web_glotq":"web_glotq","web_single-trust":"web_single-trust","pwn_tic-tac-no":"pwn_tic-tac-no","pwn_scrabasm":"pwn_scrabasm"}
+ "web_glotq":"web_glotq","web_single-trust":"web_single-trust","pwn_tic-tac-no":"pwn_tic-tac-no","pwn_scrabasm":"pwn_scrabasm",
+ "permuted":"permuted","delulu":"delulu","just_another_pickle_jail":"just_another_pickle_jail"}
 
 # 解出模型數（pass@any /6）從 bench27_runs.json
 solved = collections.defaultdict(set)
@@ -70,8 +75,8 @@ for src, arm, tid, clear, cat, diff, official, source, tech in MAP:
 
 # INDEX.md
 with open(os.path.join(OUT,"INDEX.md"),"w",encoding="utf-8") as f:
-    f.write("# Bench27 — 24 題 Writeup 索引（污染12 ＋ 近代12）\n\n")
-    f.write("命名：`<C=污染|R=近代><編號>_<類別>_<技巧>.md`。解出欄＝6 受測模型 pass@any（")
+    f.write("# Bench27 — 27 題 Writeup 索引（污染12 ＋ 近代12 ＋ 深難3）\n\n")
+    f.write("命名：`<C=污染|R=近代|D=深難><編號>_<類別>_<技巧>.md`。解出欄＝6 受測模型 pass@any（")
     f.write("順序 550b·26b·12b·30b·70b·8b，✓=解出 ·=沒解出）。\n\n")
     f.write("每題另附 `_checkpoints/<同名>.checkpoints.json`（階段錨點）與 `_frontier_opus/<同名>.frontier_opus.md`（Opus 手解參考）。\n\n")
     f.write("| 檔名 | 類別 | 難度 | 原題 | 出處 | 技巧 | 解出/6 | 550·26·12·30·70·8 |\n")
