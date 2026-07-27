@@ -47,6 +47,8 @@ for ld in LOGDIRS:
                 "epoch": getattr(s,"epoch",1),
                 "scorer": scorer_name, "score_value": val,
                 "solved": solved,                              # ← 唯一權威「解出」判準
+                "working_time": round(getattr(s,"working_time",0) or 0, 1),  # agent 實際工作秒數（非排隊）
+                "total_time": round(getattr(s,"total_time",0) or 0, 1),
                 "target_flag": tgt,
                 "submitted": submitted[:400],
                 "flag_in_submission": bool(tgt and tgt.lower() in submitted.lower()),

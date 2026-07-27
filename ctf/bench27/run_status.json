@@ -1,0 +1,24 @@
+{
+ "stamp": "2026-07-28 00:39",
+ "pwn_rerun": {
+  "done": [
+   "550b",
+   "26b",
+   "70b"
+  ],
+  "total": 6,
+  "alive": true
+ },
+ "opus5ep": {
+  "done": 13,
+  "total": 27,
+  "alive": false
+ },
+ "running": [
+  {
+   "model": "gemma-4-12b",
+   "stage": "recent2026",
+   "pwn_rerun": true
+  }
+ ]
+}
