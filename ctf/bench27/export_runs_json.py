@@ -34,6 +34,7 @@ for ld in LOGDIRS:
         if mfull not in MODELS: continue
         sh=MODELS[mfull]; scorer_name=None
         for s in (l.samples or []):
+            if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本（非能力訊號，例：pwn jail 未privileged→容器exit1）
             tid=str(s.id).split(" (")[0]; tid=ALIAS.get(tid,tid)
             sc=next(iter((s.scores or {}).items()),(None,None))
             scorer_name, scobj = sc

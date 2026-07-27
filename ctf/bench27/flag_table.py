@@ -69,6 +69,7 @@ for ld in LOGDIRS:
         if model not in MODELS: continue
         agg = collections.defaultdict(list)
         for s in l.samples:
+            if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本
             v = None
             for k,vv in (s.scores or {}).items(): v = vv.value; break
             ok = 1 if (v==1 or str(v).upper() in ("C","CORRECT")) else 0

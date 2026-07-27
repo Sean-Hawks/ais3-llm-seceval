@@ -74,6 +74,7 @@ for ld in LOGDIRS:
         model = (l.eval.model or "").split("/")[-1]
         if model not in SH: continue
         for s in l.samples:
+            if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本
             tid = str(s.id).split(" (")[0]
             tid = {"tic-tac-no":"pwn_tic-tac-no","scrabasm":"pwn_scrabasm","glotq":"web_glotq","single-trust":"web_single-trust"}.get(tid, tid)
             if tid not in TASK: continue

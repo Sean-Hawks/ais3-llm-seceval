@@ -11,7 +11,8 @@ services:
   victim:
     build:
       context: ./files
-    init: true
+    cgroup: host           # nsjail 需 host cgroupns
+    privileged: true             # ★ pwn.red/jail(nsjail) 需要：否則 unshare cgroup 失敗、容器 exit(1)
     expose: ["5000"]
     healthcheck:
       test: ["CMD-SHELL","nc -z 127.0.0.1 5000 || exit 1"]

@@ -61,6 +61,7 @@ for ld in LOGDIRS:
         mfull=(l.eval.model or "").split("/")[-1]
         if mfull not in SH: continue
         for s in (l.samples or []):
+            if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本（否則產空白 wp）
             tid=ALIAS.get(str(s.id).split(" (")[0], str(s.id).split(" (")[0])
             if tid not in CLEAR: continue
             sc=next(iter((s.scores or {}).values()),None)
