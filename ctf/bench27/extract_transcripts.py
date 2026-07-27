@@ -9,7 +9,7 @@
   每檔含該 solver 對該題的所有 epoch（污染組 5 次）authored 文字，以 --- EPOCH k --- 分隔。
 用法：.venv/bin/python ctf/bench27/extract_transcripts.py
 """
-import glob, os, re, shutil
+import glob, os, re, shutil, csv
 from inspect_ai.log import read_eval_log
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -82,22 +82,36 @@ for ld in LOGDIRS:
             bag.setdefault((tid, model), []).append((getattr(s,"epoch",1), solved, authored_text(s)))
 
 written = 0
+index_rows = []                       # (arm, task, model, epoch, solved, authored_chars)
 for (tid, model), runs in bag.items():
     name, arm = TASK[tid]
     d = os.path.join(OUT, f"{arm}__{name}"); os.makedirs(d, exist_ok=True)
-    parts = []
+    sh = SH[model]
+    parts = [f"# solver={sh}  題={arm}__{name}  epochs={len(runs)}"]
     for ep, solved, txt in sorted(runs):
-        parts.append(f"--- EPOCH {ep}  (solved={solved}) ---\n{txt}")
-    open(os.path.join(d, f"{SH[model]}.txt"), "w", encoding="utf-8").write("\n\n".join(parts))
+        # 每段標頭都飆出「模型 + 第幾次(epoch) + 是否解出」，即使片段被單獨抽出也不失上下文
+        parts.append(f"===== MODEL={sh} · 第 {ep} 次 (EPOCH {ep}) · {name} · solved={solved} =====\n{txt}")
+        index_rows.append((arm, name, sh, ep, solved, len(txt)))
+    open(os.path.join(d, f"{sh}.txt"), "w", encoding="utf-8").write("\n\n".join(parts))
     written += 1
 
-# Opus 欄：frontier_manual 手解
+# Opus 欄：frontier_manual 手解（手解＝單次參考，非 epoch）
 opus_n = 0
 for tid,(name,arm) in TASK.items():
     fm = os.path.join(ROOT, "frontier_manual", FM[tid]+".md")
     if os.path.exists(fm):
         d = os.path.join(OUT, f"{arm}__{name}"); os.makedirs(d, exist_ok=True)
-        shutil.copy(fm, os.path.join(d, "Opus-4.8.txt")); opus_n += 1
+        body = open(fm, encoding="utf-8", errors="replace").read()
+        hdr = (f"# solver=Opus-4.8  題={arm}__{name}  attempts=1(手解參考)\n"
+               f"===== MODEL=Opus-4.8 · 手解參考 (非 epoch) · {name} =====\n")
+        open(os.path.join(d, "Opus-4.8.txt"), "w", encoding="utf-8").write(hdr + body)
+        opus_n += 1
+        index_rows.append((arm, name, "Opus-4.8", 0, "manual", len(body)))
+
+# 總索引：每 (題×模型×第幾次) 一列，讓隊友 key 在 (model, epoch) 上
+with open(os.path.join(OUT, "_INDEX.csv"), "w", newline="", encoding="utf-8") as fh:
+    w = csv.writer(fh); w.writerow(["arm","task","model","epoch","solved","authored_chars"])
+    for row in sorted(index_rows): w.writerow(row)
 
 # 覆蓋度統計
 print(f"寫出 {written} 個模型 transcript + {opus_n} 個 Opus 檔，到 {OUT}/")

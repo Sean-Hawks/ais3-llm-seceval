@@ -10,8 +10,9 @@ B=ctf/bench27
 OUT=$B/handoff_recent2026
 rm -rf "$OUT"; mkdir -p "$OUT/transcripts" "$OUT/wp_bundle"
 
-# --- 1) transcripts：只挑 recent2026__* ---
+# --- 1) transcripts：只挑 recent2026__*，附 (model,epoch) 索引 ---
 cp -R "$B"/transcripts/recent2026__* "$OUT/transcripts/"
+{ head -1 "$B/transcripts/_INDEX.csv"; grep '^recent2026,' "$B/transcripts/_INDEX.csv"; } > "$OUT/transcripts/_INDEX.csv"
 
 # --- 2) wp bundle：從各題原始資料夾重建、命名一致 ---
 for d in "$B"/recent2026/*/; do
@@ -40,8 +41,10 @@ cat > "$OUT/README.md" <<'EOF'
 ## 目錄
 - `transcripts/recent2026__<題>/<solver>.txt`
   詞向量素材：每個 solver 對該題的 **authored 推理**（模型自己寫的 prose + 下的指令/程式），
-  已排除 tool 輸出/檔案 dump。含全部 epoch，以 `--- EPOCH k (solved=C/I) ---` 分隔。
-  solver = 6 模型（550b/26b/12b/30b/70b/8b）+ `Opus-4.8.txt`（手解 frontier 參考路徑）。
+  已排除 tool 輸出/檔案 dump。每段標頭都飆出**模型 + 第幾次**：
+  `===== MODEL=<模型> · 第 k 次 (EPOCH k) · <題> · solved=C/I =====`（片段被單獨抽出也不失上下文）。
+  檔首另有 `# solver=<模型> 題=... epochs=5`。solver = 6 模型（550b/26b/12b/30b/70b/8b）+ `Opus-4.8.txt`（手解參考，attempts=1）。
+- `transcripts/_INDEX.csv`  總索引：每列 = (arm, task, **model**, **epoch**, solved, authored_chars)，可直接 key 在 (model,epoch) 上。
 - `wp_bundle/recent2026__<題>__writeup.md`      標準解題 writeup
 - `wp_bundle/recent2026__<題>__checkpoints.json` 階段 checkpoint（milestone 語意 + anchors 客觀中間值），供詞向量比對／部分分
 - `wp_bundle/recent2026__<題>__frontier_opus.md` Opus 4.8 手解路徑（ground-truth-aware 參考，非盲測分）
