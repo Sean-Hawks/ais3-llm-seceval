@@ -52,40 +52,60 @@ def render_epoch(s, ep, solved, target):
     L.append(f"\n**提交**：`{(s.output.completion or '')[:200] if s.output else ''}`　**正解**：`{target}`")
     return "\n\n".join(L)
 
-# 收集 per (tid, model) -> list[(ep, solved, markdown)]
-bag=collections.defaultdict(lambda: collections.defaultdict(list))
+# 收集 per (tid, model, epoch) 取「最佳」樣本：非錯誤優先；重跑(後出現)覆蓋舊錯誤。
+# writeup 語料保留全部 27×6×5=810 格，錯誤格標記而非略過（與統計聚合器不同，統計才排除錯誤）。
+picked={}   # (tid, model, epoch) -> (is_error:bool, solved:bool, markdown:str)
 for ld in LOGDIRS:
-    for f in glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval")):
+    for f in sorted(glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval"))):  # sorted→新覆蓋舊
         try: l=read_eval_log(f)
         except Exception: continue
         mfull=(l.eval.model or "").split("/")[-1]
         if mfull not in SH: continue
+        m=SH[mfull]
         for s in (l.samples or []):
-            if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本（否則產空白 wp）
             tid=ALIAS.get(str(s.id).split(" (")[0], str(s.id).split(" (")[0])
             if tid not in CLEAR: continue
+            ep=getattr(s,"epoch",1); key=(tid,m,ep)
+            iserr=bool(getattr(s,"error",None))
+            prev=picked.get(key)
+            if prev is not None and prev[0] is False and iserr:  # 已有有效的，別讓錯誤覆蓋
+                continue
             sc=next(iter((s.scores or {}).values()),None)
             solved=bool(sc and str(sc.value).upper() in ("C","CORRECT","1"))
             tgt=(s.target if isinstance(s.target,str) else (s.target[0] if s.target else "")) or ""
-            bag[tid][SH[mfull]].append((getattr(s,"epoch",1), solved, render_epoch(s,getattr(s,"epoch",1),solved,tgt)))
+            if iserr:
+                short=str(getattr(s,"error","")).replace("\n"," ")[:140]
+                md=(f"### 第 {ep} 次 (EPOCH {ep}) — ⚠ 此 epoch 因 harness/生成錯誤未產生解題內容\n\n"
+                    f"> 錯誤：`{short}`")
+            else:
+                md=render_epoch(s,ep,solved,tgt)
+            picked[key]=(iserr,solved,md)
 
 if os.path.isdir(OUT): __import__("shutil").rmtree(OUT)
 os.makedirs(OUT)
 MODELS6=["550b","26b","12b","30b","70b","8b"]
-n_files=0; idx=[]
+EPOCHS=[1,2,3,4,5]
+n_files=0; n_sections=0; idx=[]
 for tid,(arm,clear) in CLEAR.items():
     d=os.path.join(OUT, clear); os.makedirs(d, exist_ok=True)
     per_model_solved={}
     for m in MODELS6:
-        runs=sorted(bag[tid].get(m, []))
-        nsolv=sum(1 for _,sv,_ in runs if sv)
-        per_model_solved[m]=(nsolv,len(runs))
+        parts=[]; nsolv=0; nvalid=0
+        for ep in EPOCHS:                          # ★ 保證每 (題×模型) 都有 5 段 → 27×6×5=810
+            k=(tid,m,ep)
+            if k in picked:
+                iserr,solved,md=picked[k]
+                if not iserr: nvalid+=1
+                if solved: nsolv+=1
+            else:
+                md=f"### 第 {ep} 次 (EPOCH {ep}) — （log 無此 epoch 紀錄）"
+            parts.append(md); n_sections+=1
+        per_model_solved[m]=(nsolv,nvalid)
         head=(f"# {clear} — {m} 實際解題 wp\n\n"
-              f"題目：{arm} / `{tid}`　·　此模型 {nsolv}/{len(runs)} epoch 解出　·　"
+              f"題目：{arm} / `{tid}`　·　此模型 {nsolv}/{nvalid} 有效 epoch 解出（共 5 次嘗試）　·　"
               f"標準解答見 `../../wp_27/{clear}.md`\n\n"
-              f"> 內容＝模型自己的推理＋下的指令＋工具輸出（過長截斷）＋提交。\n\n---\n\n")
-        body="\n\n---\n\n".join(md for _,_,md in runs) or "（此模型無 run 紀錄）"
-        open(os.path.join(d, f"{m}.md"),"w",encoding="utf-8").write(head+body)
+              f"> 內容＝模型自己的推理＋下的指令＋工具輸出（過長截斷）＋提交；錯誤格已標記。\n\n---\n\n")
+        open(os.path.join(d, f"{m}.md"),"w",encoding="utf-8").write(head+"\n\n---\n\n".join(parts))
         n_files+=1
     idx.append((clear, arm, tid, per_model_solved))
 
@@ -99,4 +119,4 @@ with open(os.path.join(OUT,"INDEX.md"),"w",encoding="utf-8") as f:
         cells=" | ".join(f"{pms[m][0]}/{pms[m][1]}" for m in MODELS6)
         f.write(f"| `{clear}` | {cells} |\n")
 
-print(f"寫出 {n_files} 篇 agent wp（27 題 × 6 模型）→ {OUT}/  + INDEX.md")
+print(f"寫出 {n_files} 檔 × 5 epoch = {n_sections} 個 writeup 段（目標 27×6×5=810）→ {OUT}/  + INDEX.md")
