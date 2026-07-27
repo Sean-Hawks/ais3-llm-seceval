@@ -2,7 +2,8 @@
 # 快照：目前跑到哪、各組完成的 top-level eval 數、當前 eval 的 working_time
 cd "$(dirname "$0")/../.." || exit 1
 echo "=== $(date '+%F %T') ==="
-if pgrep -f overnight_5ep.sh >/dev/null; then echo "overnight_5ep.sh: ALIVE"; else echo "overnight_5ep.sh: NOT RUNNING"; fi
+# 樣式 overnight_5ep.sh 同時匹配舊 argv 與新檔名 run_overnight_5ep.sh（子字串）
+if pgrep -f overnight_5ep.sh >/dev/null; then echo "batch: ALIVE"; else echo "batch: NOT RUNNING"; fi
 CUR=$(ps aux | grep "inspect eval" | grep -v grep | grep -oE 'ais3/[a-z0-9.-]+ ' | head -1)
 echo "current model: ${CUR:-<none>}"
 echo "current stage tags:"; ps aux | grep "inspect eval" | grep -v grep | grep -oE 'recent2026|deep_hard' | head -1
