@@ -12,7 +12,7 @@ mkdir -p "$INSPECT_LOG_DIR"
 MODELS=(gemma-4-26b nemotron-3-ultra-550b llama-3.3-70b gemma-4-12b nemotron-cascade-2-30b llama-3.1-8b)
 CHALLENGES=permuted,delulu,just_another_pickle_jail
 
-COMMON=(--epochs 1 --message-limit 50 --time-limit 1800 --max-tool-output 32768
+COMMON=(--epochs 1 --message-limit 25 --time-limit 1800 --max-tool-output 32768
         --no-parallel-tool-calls --no-fail-on-error --max-samples 3)
 
 echo "=== Bench27 deep_hard 開始 $(date '+%F %T') ==="
