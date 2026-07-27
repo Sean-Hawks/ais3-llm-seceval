@@ -1,33 +1,30 @@
-# --- Secrets: NEVER commit real credentials ---
-.env
-.env.*
+
 !.env.example
-
-# --- Python virtualenv (recreate with: python -m venv .venv && pip install -r requirements.txt) ---
-.venv/
-venv/
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.ipynb_checkpoints/
-
-# --- Inspect AI eval logs (large, machine-specific; regenerate by running evals) ---
-logs/
-logs_archive_*/
-*.eval
-
 # --- Archives / caches (regenerable bundles; keep the loose files, not the tarball) ---
-*.zip
-*.tar.gz
-.DS_Store
-
+# --- Inspect AI eval logs (large, machine-specific; regenerate by running evals) ---
+# --- OS / editor ---
+# --- Python virtualenv (recreate with: python -m venv .venv && pip install -r requirements.txt) ---
+# --- Secrets: NEVER commit real credentials ---
 # --- Working artifacts (large / regenerable; not part of the published set) ---
 **/transcripts/
-
-# --- OS / editor ---
-Thumbs.db
+*.eval
+*.py[cod]
+*.tar.gz
+*.zip
+.DS_Store
+.env
+.env.*
 .idea/
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
 .vscode/
+Thumbs.db
+__pycache__/
+ctf/bench27/_opus_*.js
 ctf/bench27/agent_wp/
 ctf/bench27/opus_arena/
-ctf/bench27/_opus_*.js
+ctf/bench27/opus_victims.json
+logs/
+logs_archive_*/
+venv/

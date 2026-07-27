@@ -63,5 +63,25 @@
   "n": 5,
   "t": 5,
   "clear": "R08_misc_QR-reed-solomon-rebuild"
+ },
+ "crypto_six-seven": {
+  "n": 5,
+  "t": 5,
+  "clear": "R01_crypto_digit-6-7-prime-factoring"
+ },
+ "slcg": {
+  "n": 5,
+  "t": 5,
+  "clear": "C02_crypto_sequential-LCG"
+ },
+ "missingbits": {
+  "n": 5,
+  "t": 5,
+  "clear": "C03_crypto_RSA-missing-bits"
+ },
+ "permuted": {
+  "n": 5,
+  "t": 5,
+  "clear": "D01_crypto_permutation-group-DLP"
  }
 }
