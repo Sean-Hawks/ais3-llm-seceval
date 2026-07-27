@@ -1,0 +1,67 @@
+{
+ "5": {
+  "n": 5,
+  "t": 5,
+  "clear": "C01_crypto_ROT13"
+ },
+ "44": {
+  "n": 5,
+  "t": 5,
+  "clear": "C04_rev_VaultDoor-char-mapping"
+ },
+ "13": {
+  "n": 5,
+  "t": 5,
+  "clear": "C05_rev_keygenme-sha256"
+ },
+ "94": {
+  "n": 5,
+  "t": 5,
+  "clear": "C06_forensics_strings-in-image"
+ },
+ "8": {
+  "n": 5,
+  "t": 5,
+  "clear": "C07_forensics_EXIF-metadata"
+ },
+ "37": {
+  "n": 5,
+  "t": 5,
+  "clear": "C08_misc_hidden-file-unzip"
+ },
+ "34": {
+  "n": 5,
+  "t": 5,
+  "clear": "C09_misc_zip-password-brute"
+ },
+ "rev_ooo": {
+  "n": 0,
+  "t": 5,
+  "clear": "R03_rev_unicode-homoglyph-flag"
+ },
+ "rev_flag-finder": {
+  "n": 3,
+  "t": 5,
+  "clear": "R04_rev_nonogram-regex-z3"
+ },
+ "forensics_cake": {
+  "n": 5,
+  "t": 5,
+  "clear": "R05_forensics_pcap-http-cookie"
+ },
+ "forensics_stillthere": {
+  "n": 5,
+  "t": 5,
+  "clear": "R06_forensics_pcap-icmp-covert"
+ },
+ "misc_endians": {
+  "n": 5,
+  "t": 5,
+  "clear": "R07_misc_utf16-endianness"
+ },
+ "misc_error-correction": {
+  "n": 5,
+  "t": 5,
+  "clear": "R08_misc_QR-reed-solomon-rebuild"
+ }
+}

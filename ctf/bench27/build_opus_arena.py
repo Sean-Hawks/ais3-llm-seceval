@@ -2,12 +2,24 @@
 """替 Opus 5-epoch 盲解準備乾淨場地：把每題的『真題檔』(排除 solution/writeup/checkpoints)
 搬進 opus_arena/<clear>/challenge/，並記錄 gold flag / 是否需 Docker / prompt → opus_tasks.json。
 真題來源＝6 受測模型跑批用的同一份上游檔（picoCTF 快取 + cybench challenges），確保可比。"""
-import os, json, shutil, glob
+import os, json, shutil, glob, re
 ROOT = os.path.dirname(os.path.abspath(__file__))
 INSPECT = os.path.abspath(os.path.join(ROOT, "../.."))
 ARENA = os.path.join(ROOT, "opus_arena")
 PICO = os.path.expanduser("~/Library/Caches/inspect_evals/gdm_intercode_ctf/data/task_assets")
 CYB = glob.glob(os.path.join(INSPECT, ".venv/lib/*/site-packages/inspect_evals/cybench/challenges"))[0]
+# 題目敘述來源（含 pico 的密文 query）＝與 6 受測模型跑批同一份
+ICCTF = {str(t["task_id"]): t for t in json.load(open(
+    os.path.expanduser("~/Library/Caches/inspect_evals/gdm_intercode_ctf/data/ic_ctf.json"), encoding="utf-8"))}
+def cyb_hard_prompt(name):
+    """從 cybench eval.yaml 抓 hard variant 的 prompt（受測模型跑的就是 hard）。"""
+    p = os.path.join(CYB, name, "eval.yaml")
+    if not os.path.exists(p): return None
+    txt = open(p, encoding="utf-8").read()
+    m = re.search(r"^  hard:\n    prompt: \|\n((?:      .*\n?)+)", txt, re.M)   # 區塊式 prompt: |
+    if m: return re.sub(r"^      ", "", m.group(1), flags=re.M).strip()
+    m = re.search(r"^  hard:\n    prompt: (?!\|)(.+)$", txt, re.M)               # 單行式 prompt: <text>
+    return m.group(1).strip() if m else None
 
 # (clear, arm, tid, kind, src_ref, bench_dir)  kind: pico=<id> / cyb=<name> / recent=<dir>
 # bench_dir：含 gold flag 的 checkpoints.json 所在（contaminated/deep 用；recent 用 challenge.json）
@@ -60,6 +72,7 @@ for clear, arm, tid, kind, ref, bench_dir in TASKS:
     gold=prompt=compose=None
     if kind=="pico":
         copy_filtered(os.path.join(PICO, ref), chdir)
+        prompt = (ICCTF.get(ref) or {}).get("query")   # ★ 含密文的題目敘述
     elif kind=="cyb":
         base=os.path.join(CYB, ref)
         # cybench 真題檔在 resources/（可下載檔）；pwn/web 的 victim 二進位/原始碼在 images/*/（排除 flag）
@@ -70,6 +83,7 @@ for clear, arm, tid, kind, ref, bench_dir in TASKS:
             if os.path.isdir(img): copy_filtered(img, os.path.join(chdir, "server_"+os.path.basename(img)))
         comp=os.path.join(base, "compose.yaml")
         if os.path.exists(comp): compose=comp
+        prompt = cyb_hard_prompt(ref)                  # ★ hard variant 敘述（受測模型同款）
     if kind in ("pico","cyb"):
         cp=json.load(open(os.path.join(ROOT, bench_dir, "checkpoints.json"),encoding="utf-8"))
         gold=cp.get("flag")

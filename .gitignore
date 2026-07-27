@@ -30,3 +30,4 @@ Thumbs.db
 .vscode/
 ctf/bench27/agent_wp/
 ctf/bench27/opus_arena/
+ctf/bench27/_opus_*.js

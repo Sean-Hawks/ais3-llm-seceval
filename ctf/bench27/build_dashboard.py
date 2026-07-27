@@ -6,9 +6,13 @@ import json, os, re, sys, datetime
 ROOT = os.path.dirname(os.path.abspath(__file__))
 runs = json.load(open(os.path.join(ROOT, "bench27_runs.json"), encoding="utf-8"))
 RUNS = [[r["task"], r["model"], 1 if r["solved"] else 0] for r in runs]
+# Opus 5-epoch 盲解成績（頂端標準欄）；跑到哪灌到哪
+op = os.path.join(ROOT, "opus_runs.json")
+OPUS = json.load(open(op, encoding="utf-8")) if os.path.exists(op) else {}
 html_path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "dashboard.html")
 h = open(html_path, encoding="utf-8").read()
 h = h.replace("/*__RUNS__*/", json.dumps(RUNS, ensure_ascii=False, separators=(",", ":")))
+h = h.replace("/*__OPUS__*/", json.dumps(OPUS, ensure_ascii=False, separators=(",", ":")))
 h = re.sub(r"/\*__STAMP__\*/", datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), h, count=1)
 open(html_path, "w", encoding="utf-8").write(h)
-print(f"注入 {len(RUNS)} 筆 run → {html_path}")
+print(f"注入 {len(RUNS)} 筆 model run + Opus 5ep {len(OPUS)}/27 題 → {html_path}")

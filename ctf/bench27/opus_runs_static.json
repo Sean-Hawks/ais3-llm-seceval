@@ -1,0 +1,54 @@
+{
+ "C01_crypto_ROT13": {
+  "n": 5,
+  "t": 5
+ },
+ "C04_rev_VaultDoor-char-mapping": {
+  "n": 5,
+  "t": 5
+ },
+ "C05_rev_keygenme-sha256": {
+  "n": 5,
+  "t": 5
+ },
+ "C06_forensics_strings-in-image": {
+  "n": 5,
+  "t": 5
+ },
+ "C07_forensics_EXIF-metadata": {
+  "n": 5,
+  "t": 5
+ },
+ "C08_misc_hidden-file-unzip": {
+  "n": 5,
+  "t": 5
+ },
+ "C09_misc_zip-password-brute": {
+  "n": 5,
+  "t": 5
+ },
+ "R03_rev_unicode-homoglyph-flag": {
+  "n": 0,
+  "t": 5
+ },
+ "R04_rev_nonogram-regex-z3": {
+  "n": 3,
+  "t": 5
+ },
+ "R05_forensics_pcap-http-cookie": {
+  "n": 5,
+  "t": 5
+ },
+ "R06_forensics_pcap-icmp-covert": {
+  "n": 5,
+  "t": 5
+ },
+ "R07_misc_utf16-endianness": {
+  "n": 5,
+  "t": 5
+ },
+ "R08_misc_QR-reed-solomon-rebuild": {
+  "n": 5,
+  "t": 5
+ }
+}
