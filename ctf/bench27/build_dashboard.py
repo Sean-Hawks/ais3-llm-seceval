@@ -15,6 +15,11 @@ st = os.path.join(ROOT, "run_status.json")
 STATUS = json.load(open(st, encoding="utf-8")) if os.path.exists(st) else {}
 html_path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "dashboard.html")
 h = open(html_path, encoding="utf-8").read()
+# ★ 先把任何已烤入的 const 還原成 placeholder（讓本腳本對「模板或已烤檔」都可重複執行）
+h = re.sub(r"const RUNS = .*?;", "const RUNS = /*__RUNS__*/;", h, count=1)
+h = re.sub(r"const OPUS = .*?;", "const OPUS = /*__OPUS__*/;", h, count=1)
+h = re.sub(r"const STATUS = .*?;", "const STATUS = /*__STATUS__*/;", h, count=1)
+h = re.sub(r'const STAMP = "[^"]*";', 'const STAMP = "/*__STAMP__*/";', h, count=1)
 h = h.replace("/*__RUNS__*/", json.dumps(RUNS, ensure_ascii=False, separators=(",", ":")))
 h = h.replace("/*__OPUS__*/", json.dumps(OPUS, ensure_ascii=False, separators=(",", ":")))
 h = h.replace("/*__STATUS__*/", json.dumps(STATUS, ensure_ascii=False, separators=(",", ":")))
