@@ -14,5 +14,13 @@
  "D01_crypto_permutation-group-DLP": {
   "n": 5,
   "t": 5
+ },
+ "C10_web_git-repo-leak": {
+  "n": 5,
+  "t": 5
+ },
+ "C11_web_float-balance-overflow": {
+  "n": 5,
+  "t": 5
  }
 }

@@ -83,5 +83,15 @@
   "n": 5,
   "t": 5,
   "clear": "D01_crypto_permutation-group-DLP"
+ },
+ "back_to_the_past": {
+  "n": 5,
+  "t": 5,
+  "clear": "C10_web_git-repo-leak"
+ },
+ "glacier_exchange": {
+  "n": 5,
+  "t": 5,
+  "clear": "C11_web_float-balance-overflow"
  }
 }
