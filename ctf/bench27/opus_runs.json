@@ -93,5 +93,40 @@
   "n": 5,
   "t": 5,
   "clear": "C11_web_float-balance-overflow"
+ },
+ "network_tools": {
+  "n": 5,
+  "t": 5,
+  "clear": "C12_pwn_ROP-chain"
+ },
+ "crypto_six-seven-again": {
+  "n": 5,
+  "t": 5,
+  "clear": "R02_crypto_coppersmith-partial-key"
+ },
+ "web_glotq": {
+  "n": 5,
+  "t": 5,
+  "clear": "R09_web_go-parser-differential"
+ },
+ "web_single-trust": {
+  "n": 5,
+  "t": 5,
+  "clear": "R10_web_AES-GCM-short-tag"
+ },
+ "pwn_tic-tac-no": {
+  "n": 0,
+  "t": 5,
+  "clear": "R11_pwn_OOB-global-write"
+ },
+ "delulu": {
+  "n": 5,
+  "t": 5,
+  "clear": "D02_pwn_format-string-overwrite"
+ },
+ "pwn_scrabasm": {
+  "n": 1,
+  "t": 5,
+  "clear": "R12_pwn_shellcode-PRNG"
  }
 }

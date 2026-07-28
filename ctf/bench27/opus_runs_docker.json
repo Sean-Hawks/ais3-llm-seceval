@@ -22,5 +22,33 @@
  "C11_web_float-balance-overflow": {
   "n": 5,
   "t": 5
+ },
+ "C12_pwn_ROP-chain": {
+  "n": 5,
+  "t": 5
+ },
+ "R02_crypto_coppersmith-partial-key": {
+  "n": 5,
+  "t": 5
+ },
+ "R09_web_go-parser-differential": {
+  "n": 5,
+  "t": 5
+ },
+ "R10_web_AES-GCM-short-tag": {
+  "n": 5,
+  "t": 5
+ },
+ "R11_pwn_OOB-global-write": {
+  "n": 0,
+  "t": 5
+ },
+ "D02_pwn_format-string-overwrite": {
+  "n": 5,
+  "t": 5
+ },
+ "R12_pwn_shellcode-PRNG": {
+  "n": 1,
+  "t": 5
  }
 }
