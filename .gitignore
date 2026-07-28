@@ -21,12 +21,13 @@
 .vscode/
 Thumbs.db
 __pycache__/
+ctf/bench27/_WP_PACKAGE_README.md
 ctf/bench27/_opus_*.js
 ctf/bench27/agent_wp/
 ctf/bench27/opus_arena/
 ctf/bench27/opus_victims.json
+ctf/bench27/original_writeups/
+ctf/bench27/wp_package/
 logs/
 logs_archive_*/
 venv/
-ctf/bench27/wp_package/
-ctf/bench27/_WP_PACKAGE_README.md
