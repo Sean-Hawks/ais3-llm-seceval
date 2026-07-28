@@ -50,5 +50,9 @@
  "R12_pwn_shellcode-PRNG": {
   "n": 1,
   "t": 5
+ },
+ "D03_misc_pickle-jail-escape": {
+  "n": 1,
+  "t": 5
  }
 }

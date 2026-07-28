@@ -28,3 +28,5 @@ ctf/bench27/opus_victims.json
 logs/
 logs_archive_*/
 venv/
+ctf/bench27/wp_package/
+ctf/bench27/_WP_PACKAGE_README.md

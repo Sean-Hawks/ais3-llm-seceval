@@ -128,5 +128,10 @@
   "n": 1,
   "t": 5,
   "clear": "R12_pwn_shellcode-PRNG"
+ },
+ "just_another_pickle_jail": {
+  "n": 1,
+  "t": 5,
+  "clear": "D03_misc_pickle-jail-escape"
  }
 }
