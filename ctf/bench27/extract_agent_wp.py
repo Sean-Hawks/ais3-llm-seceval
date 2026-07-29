@@ -1,9 +1,26 @@
 #!/usr/bin/env python3
 """每個受測模型『實際解題』的完整 wp：推理 + 下的指令 + 工具輸出 + 提交/flag。
 與標準解答 wp_27/ 平行，命名一致。輸出 agent_wp/<清楚題名>/<model>.md（含所有 epoch）。
-工具輸出過長會截斷（預設 1600 字/則）以保可讀。"""
+工具輸出過長會截斷（預設 1600 字/則）以保可讀。
+⚠ 本腳本會 rmtree 整個 agent_wp/ 重建，**只產 6 個受測模型**；Opus-4.8.md 由 extract_opus_wp.py 產，
+  故跑完本腳本後務必接著跑 `extract_opus_wp.py` 補回 Opus 欄（否則 27 個 Opus 檔會消失）。"""
 import glob, os, json, collections
 from inspect_ai.log import read_eval_log
+
+def no_generation(s):
+    """gateway 504 / 連線中斷導致該樣本 0 次生成（無任何 assistant 訊息）＝無效樣本。
+    沒量到東西，不是模型答錯；一律從分母剔除，不做選擇性重跑。"""
+    return not any(getattr(m, "role", "") == "assistant" for m in (s.messages or []))
+
+def gateway_error(s):
+    """從 model event 撈出真正的 gateway 錯誤（504 / Connection error）供標記顯示。"""
+    for e in (s.events or []):
+        if getattr(e, "event", "") == "model" and getattr(e, "error", None):
+            t = " ".join(str(e.error).split())
+            if "504" in t: return "504 Gateway Time-out（gateway 逾時掐斷）"
+            return t[:120]
+    return ""
+
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 INSPECT_ROOT = os.path.abspath(os.path.join(ROOT, "../.."))
@@ -73,10 +90,19 @@ for ld in LOGDIRS:
             sc=next(iter((s.scores or {}).values()),None)
             solved=bool(sc and str(sc.value).upper() in ("C","CORRECT","1"))
             tgt=(s.target if isinstance(s.target,str) else (s.target[0] if s.target else "")) or ""
-            if iserr:
-                short=str(getattr(s,"error","")).replace("\n"," ")[:140]
-                md=(f"### 第 {ep} 次 (EPOCH {ep}) — ⚠ 此 epoch 因 harness/生成錯誤未產生解題內容\n\n"
-                    f"> 錯誤：`{short}`")
+            nogen=(not iserr) and no_generation(s)
+            if iserr or nogen:
+                if nogen:
+                    short=gateway_error(s) or "（無 model event 錯誤紀錄）"
+                    md=(f"### 第 {ep} 次 (EPOCH {ep}) — ⚠ 無效樣本：0 次生成，**不計入分母**\n\n"
+                        f"> gateway 回錯／連線中斷，重試耗盡後撞 time-limit，模型一則回覆都沒產出。\n"
+                        f"> **這不是模型答錯，是沒量到東西**；依「不做選擇性重跑」原則剔除而非補跑。\n>\n"
+                        f"> 錯誤：`{short}`")
+                else:
+                    short=str(getattr(s,"error","")).replace("\n"," ")[:140]
+                    md=(f"### 第 {ep} 次 (EPOCH {ep}) — ⚠ 此 epoch 因 harness/生成錯誤未產生解題內容\n\n"
+                        f"> 錯誤：`{short}`")
+                iserr=True                      # 一併排除於「有效 epoch」分母
             else:
                 md=render_epoch(s,ep,solved,tgt)
             picked[key]=(iserr,solved,md)

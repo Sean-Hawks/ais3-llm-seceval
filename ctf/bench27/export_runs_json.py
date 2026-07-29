@@ -6,6 +6,12 @@
 import glob, os, json, collections
 from inspect_ai.log import read_eval_log
 
+def no_generation(s):
+    """gateway 504 / 連線中斷導致該樣本 0 次生成（無任何 assistant 訊息）＝無效樣本。
+    沒量到東西，不是模型答錯；一律從分母剔除，不做選擇性重跑。"""
+    return not any(getattr(m, "role", "") == "assistant" for m in (s.messages or []))
+
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 INSPECT_ROOT = os.path.abspath(os.path.join(ROOT, "../.."))
 LOGDIRS = ["logs/bench27/contaminated", "logs/bench27/recent2026", "logs/bench27/deep_hard"]
@@ -35,6 +41,7 @@ for ld in LOGDIRS:
         sh=MODELS[mfull]; scorer_name=None
         for s in (l.samples or []):
             if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本（非能力訊號，例：pwn jail 未privileged→容器exit1）
+            if no_generation(s): continue          # ★ 略過 gateway 504/斷線導致 0 次生成的樣本（沒量到東西，非答錯）
             tid=str(s.id).split(" (")[0]; tid=ALIAS.get(tid,tid)
             sc=next(iter((s.scores or {}).items()),(None,None))
             scorer_name, scobj = sc

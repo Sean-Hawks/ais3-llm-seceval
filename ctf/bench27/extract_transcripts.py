@@ -12,6 +12,12 @@
 import glob, os, re, shutil, csv
 from inspect_ai.log import read_eval_log
 
+def no_generation(s):
+    """gateway 504 / 連線中斷導致該樣本 0 次生成（無任何 assistant 訊息）＝無效樣本。
+    沒量到東西，不是模型答錯；一律從分母剔除，不做選擇性重跑。"""
+    return not any(getattr(m, "role", "") == "assistant" for m in (s.messages or []))
+
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 INSPECT_ROOT = os.path.abspath(os.path.join(ROOT, "../.."))
 OUT = os.path.join(ROOT, "transcripts")
@@ -75,6 +81,7 @@ for ld in LOGDIRS:
         if model not in SH: continue
         for s in l.samples:
             if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本
+            if no_generation(s): continue          # ★ 略過 gateway 504/斷線導致 0 次生成的樣本
             tid = str(s.id).split(" (")[0]
             tid = {"tic-tac-no":"pwn_tic-tac-no","scrabasm":"pwn_scrabasm","glotq":"web_glotq","single-trust":"web_single-trust"}.get(tid, tid)
             if tid not in TASK: continue

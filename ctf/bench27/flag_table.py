@@ -8,6 +8,12 @@ Opus 欄來自 frontier_manual/<題>.md 的 SOLVED（yes→✓ 過旗；partial�
 import glob, os, re, json, collections, sys
 from inspect_ai.log import read_eval_log
 
+def no_generation(s):
+    """gateway 504 / 連線中斷導致該樣本 0 次生成（無任何 assistant 訊息）＝無效樣本。
+    沒量到東西，不是模型答錯；一律從分母剔除，不做選擇性重跑。"""
+    return not any(getattr(m, "role", "") == "assistant" for m in (s.messages or []))
+
+
 ROOT = os.path.dirname(os.path.abspath(__file__))            # ctf/bench27
 INSPECT_ROOT = os.path.abspath(os.path.join(ROOT, "../.."))  # inspect-test
 LOGDIRS = ["logs/bench27/contaminated", "logs/bench27/recent2026", "logs/bench27/deep_hard"]
@@ -70,6 +76,7 @@ for ld in LOGDIRS:
         agg = collections.defaultdict(list)
         for s in l.samples:
             if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本
+            if no_generation(s): continue          # ★ 略過 gateway 504/斷線導致 0 次生成的樣本
             v = None
             for k,vv in (s.scores or {}).items(): v = vv.value; break
             ok = 1 if (v==1 or str(v).upper() in ("C","CORRECT")) else 0
