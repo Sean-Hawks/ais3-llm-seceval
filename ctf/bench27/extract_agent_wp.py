@@ -50,8 +50,42 @@ CLEAR = {
  "just_another_pickle_jail":("deep_hard","D03_misc_pickle-jail-escape"),
 }
 
+def sample_stats(s):
+    """該 epoch 的用時與 token 用量。total=牆鐘（含排隊/重試退避）；working=實際工作時間。"""
+    u = None
+    for v in (getattr(s, "model_usage", None) or {}).values():
+        u = v; break
+    n_msg = sum(1 for m in (s.messages or []) if getattr(m, "role", "") == "assistant")
+    n_tool = sum(1 for m in (s.messages or []) if getattr(m, "role", "") == "tool")
+    lim = getattr(s, "limit", None)
+    return {"total": s.total_time or 0.0, "working": s.working_time or 0.0,
+            "in": getattr(u, "input_tokens", 0) or 0, "out": getattr(u, "output_tokens", 0) or 0,
+            "msgs": n_msg, "tools": n_tool, "limit": (lim.type if lim else None)}
+
+def fmt_dur(sec):
+    sec = int(round(sec))
+    return f"{sec}s" if sec < 60 else f"{sec//60}m{sec%60:02d}s"
+
+def fmt_tok(n):
+    if n >= 1_000_000: return f"{n/1_000_000:.1f}M"
+    return f"{n/1000:.1f}k" if n >= 1000 else str(n)
+
+LIM_ZH = {"time": "撞時間上限", "message": "撞訊息上限", "token": "撞 token 上限", "operator": "被中止"}
+
+def stats_line(st):
+    """一行摘要，放在每個 epoch 標頭下方。"""
+    parts = [f"用時 **{fmt_dur(st['total'])}**（實際工作 {fmt_dur(st['working'])}）",
+             f"{st['msgs']} 次生成／{st['tools']} 次工具呼叫",
+             f"token in {fmt_tok(st['in'])}・out {fmt_tok(st['out'])}"]
+    if st["msgs"]:
+        parts.append(f"平均 {st['working']/st['msgs']:.0f}s/次生成")
+    if st["limit"]:
+        parts.append(f"**結束原因：{LIM_ZH.get(st['limit'], st['limit'])}**")
+    return "> ⏱ " + "　·　".join(parts)
+
 def render_epoch(s, ep, solved, target):
-    L=[f"### 第 {ep} 次 (EPOCH {ep}) — solved={'✅ C' if solved else '❌ I'}"]
+    st = sample_stats(s)
+    L=[f"### 第 {ep} 次 (EPOCH {ep}) — solved={'✅ C' if solved else '❌ I'}", stats_line(st)]
     for m in s.messages or []:
         role=getattr(m,"role","")
         txt=(getattr(m,"text","") or "").strip()
@@ -91,10 +125,12 @@ for ld in LOGDIRS:
             solved=bool(sc and str(sc.value).upper() in ("C","CORRECT","1"))
             tgt=(s.target if isinstance(s.target,str) else (s.target[0] if s.target else "")) or ""
             nogen=(not iserr) and no_generation(s)
+            st=sample_stats(s)
             if iserr or nogen:
                 if nogen:
                     short=gateway_error(s) or "（無 model event 錯誤紀錄）"
                     md=(f"### 第 {ep} 次 (EPOCH {ep}) — ⚠ 無效樣本：0 次生成，**不計入分母**\n\n"
+                        f"> ⏱ 空燒 **{fmt_dur(st['total'])}**（0 次生成、0 token）\n>\n"
                         f"> gateway 回錯／連線中斷，重試耗盡後撞 time-limit，模型一則回覆都沒產出。\n"
                         f"> **這不是模型答錯，是沒量到東西**；依「不做選擇性重跑」原則剔除而非補跑。\n>\n"
                         f"> 錯誤：`{short}`")
@@ -105,34 +141,52 @@ for ld in LOGDIRS:
                 iserr=True                      # 一併排除於「有效 epoch」分母
             else:
                 md=render_epoch(s,ep,solved,tgt)
-            picked[key]=(iserr,solved,md)
+            picked[key]=(iserr,solved,md,st)
 
 if os.path.isdir(OUT): __import__("shutil").rmtree(OUT)
 os.makedirs(OUT)
 MODELS6=["550b","26b","12b","30b","70b","8b"]
 EPOCHS=[1,2,3,4,5]
-n_files=0; n_sections=0; idx=[]
+n_files=0; n_sections=0; idx=[]; GRAND={}
 for tid,(arm,clear) in CLEAR.items():
     d=os.path.join(OUT, clear); os.makedirs(d, exist_ok=True)
     per_model_solved={}
     for m in MODELS6:
-        parts=[]; nsolv=0; nvalid=0
+        parts=[]; nsolv=0; nvalid=0; rows=[]; agg={"total":0.0,"working":0.0,"in":0,"out":0,"msgs":0}
         for ep in EPOCHS:                          # ★ 保證每 (題×模型) 都有 5 段 → 27×6×5=810
             k=(tid,m,ep)
             if k in picked:
-                iserr,solved,md=picked[k]
-                if not iserr: nvalid+=1
+                iserr,solved,md,st=picked[k]
+                if not iserr:
+                    nvalid+=1
+                    for f_ in agg: agg[f_]+=st[f_]
                 if solved: nsolv+=1
+                mark="⚠ 無效" if iserr else ("✅" if solved else "❌")
+                rows.append(f"| {ep} | {mark} | {fmt_dur(st['total'])} | {fmt_dur(st['working'])} | "
+                            f"{st['msgs']} | {st['tools']} | {fmt_tok(st['in'])} | {fmt_tok(st['out'])} | "
+                            f"{LIM_ZH.get(st['limit'],'自行結束') if not iserr else '—'} |")
             else:
                 md=f"### 第 {ep} 次 (EPOCH {ep}) — （log 無此 epoch 紀錄）"
+                rows.append(f"| {ep} | · | — | — | — | — | — | — | 無紀錄 |")
             parts.append(md); n_sections+=1
         per_model_solved[m]=(nsolv,nvalid)
+        usage=("## 解題時間與用量\n\n"
+               "牆鐘＝含 gateway 排隊／重試退避；**實際工作**＝扣掉等待後真正花的時間（診斷慢時看這欄）。\n\n"
+               "| epoch | 結果 | 牆鐘 | 實際工作 | 生成次數 | 工具呼叫 | token in | token out | 結束原因 |\n"
+               "|---|---|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n\n"
+               f"**有效 {nvalid} 次合計**：牆鐘 {fmt_dur(agg['total'])}　·　實際工作 {fmt_dur(agg['working'])}"
+               f"　·　token in {fmt_tok(agg['in'])}・out {fmt_tok(agg['out'])}"
+               + (f"　·　平均 {agg['working']/agg['msgs']:.0f}s/次生成" if agg['msgs'] else "") + "\n")
         head=(f"# {clear} — {m} 實際解題 wp\n\n"
               f"題目：{arm} / `{tid}`　·　此模型 {nsolv}/{nvalid} 有效 epoch 解出（共 5 次嘗試）　·　"
               f"標準解答見 `../../wp_27/{clear}.md`\n\n"
-              f"> 內容＝模型自己的推理＋下的指令＋工具輸出（過長截斷）＋提交；錯誤格已標記。\n\n---\n\n")
+              f"> 內容＝模型自己的推理＋下的指令＋工具輸出（過長截斷）＋提交；錯誤格已標記。\n\n"
+              f"{usage}\n---\n\n")
         open(os.path.join(d, f"{m}.md"),"w",encoding="utf-8").write(head+"\n\n---\n\n".join(parts))
         n_files+=1
+        g=GRAND.setdefault(m,{"total":0.0,"working":0.0,"in":0,"out":0,"msgs":0,"n":0})
+        for f_ in ("total","working","in","out","msgs"): g[f_]+=agg[f_]
+        g["n"]+=nvalid
     idx.append((clear, arm, tid, per_model_solved))
 
 with open(os.path.join(OUT,"INDEX.md"),"w",encoding="utf-8") as f:
@@ -144,5 +198,17 @@ with open(os.path.join(OUT,"INDEX.md"),"w",encoding="utf-8") as f:
     for clear,arm,tid,pms in idx:
         cells=" | ".join(f"{pms[m][0]}/{pms[m][1]}" for m in MODELS6)
         f.write(f"| `{clear}` | {cells} |\n")
+    # 全域用量彙總（只算有效樣本）
+    f.write("\n## 解題時間與用量彙總（27 題合計，僅有效樣本）\n\n")
+    f.write("牆鐘含 gateway 排隊／重試退避；**實際工作**才是模型真正花的時間。\n")
+    f.write("`秒/次生成` 是踩不踩得到 gateway 逾時的關鍵指標（越大越容易被 504 掐斷）。\n\n")
+    f.write("| 模型 | 有效樣本 | 牆鐘合計 | 實際工作合計 | token in | token out | 秒/次生成 |\n")
+    f.write("|---|---|---|---|---|---|---|\n")
+    for m in MODELS6:
+        g=GRAND.get(m)
+        if not g: continue
+        rate=f"{g['working']/g['msgs']:.1f}s" if g['msgs'] else "—"
+        f.write(f"| {m} | {g['n']}/135 | {fmt_dur(g['total'])} | {fmt_dur(g['working'])} | "
+                f"{fmt_tok(g['in'])} | {fmt_tok(g['out'])} | {rate} |\n")
 
 print(f"寫出 {n_files} 檔 × 5 epoch = {n_sections} 個 writeup 段（目標 27×6×5=810）→ {OUT}/  + INDEX.md")

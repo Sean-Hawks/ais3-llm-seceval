@@ -1,0 +1,9 @@
+# arm64 主機備援：nsjail(seccomp) 在 qemu 模擬下跑不起來，改用 socat 直接把 x86-64 binary 服務出去。
+FROM --platform=linux/amd64 ubuntu:22.04
+RUN apt-get update && apt-get install -y --no-install-recommends socat && rm -rf /var/lib/apt/lists/*
+COPY chall /app/run
+COPY flag.txt /app/flag.txt
+RUN chmod 755 /app/run
+WORKDIR /app
+EXPOSE 5000
+CMD ["socat","TCP-LISTEN:5000,fork,reuseaddr","EXEC:/app/run,stderr"]
