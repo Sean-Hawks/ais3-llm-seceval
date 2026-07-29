@@ -115,8 +115,8 @@
   "clear": "R10_web_AES-GCM-short-tag"
  },
  "pwn_tic-tac-no": {
-  "n": 0,
-  "t": 5,
+  "n": 1,
+  "t": 1,
   "clear": "R11_pwn_OOB-global-write"
  },
  "delulu": {
