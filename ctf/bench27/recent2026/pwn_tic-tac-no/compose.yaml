@@ -11,6 +11,7 @@ services:
   victim:
     build:
       context: ./files
+    platform: linux/amd64  # ★ chall 是 x86-64 ELF；arm64 主機(M3)須經 qemu/Rosetta 模擬才跑得起來
     cgroup: host           # nsjail 需 host cgroupns
     privileged: true             # ★ pwn.red/jail(nsjail) 需要：否則 unshare cgroup 失敗、容器 exit(1)
     expose: ["5000"]
