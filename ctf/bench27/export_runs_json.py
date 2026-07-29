@@ -30,15 +30,19 @@ def full_transcript(s):
             parts.append(" ".join(str(v) for v in a.values()))
     return "\n".join(parts)
 
-rows=[]
+# ★ 去重（整次取代語意）：同一 (arm,題,模型) 可能被跑過多次（例：arm64 pwn 修好後重跑，
+#   舊 5-epoch 壞檔與新 1-epoch 檔並存）。**每個 (arm,題,模型) 只保留「最新那一次跑」的全部 epoch**
+#   ——用最新 log 檔（檔名 ISO 時間戳，字典序即時序）的樣本整組取代舊檔，1-epoch 重跑即可完整
+#   洗掉舊 5-epoch（不會殘留舊 epoch 2–5）。cybench 一檔含多題故按 (題,模型) 而非整檔判斷。
+bytm={}   # (arm,tid,sh) -> {"file": 最新log檔名, "rows": [該檔此key的所有樣本]}
 for ld in LOGDIRS:
     arm=ld.split("/")[-1]
-    for f in glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval")):
+    for f in sorted(glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval"))):  # 舊→新
         try: l=read_eval_log(f)
         except Exception: continue
         mfull=(l.eval.model or "").split("/")[-1]
         if mfull not in MODELS: continue
-        sh=MODELS[mfull]; scorer_name=None
+        sh=MODELS[mfull]; scorer_name=None; fname=os.path.basename(f)
         for s in (l.samples or []):
             if getattr(s,"error",None): continue   # ★ 略過 harness/sandbox 錯誤樣本（非能力訊號，例：pwn jail 未privileged→容器exit1）
             if no_generation(s): continue          # ★ 略過 gateway 504/斷線導致 0 次生成的樣本（沒量到東西，非答錯）
@@ -49,7 +53,7 @@ for ld in LOGDIRS:
             solved = str(val).upper() in ("C","CORRECT","1")
             tgt=(s.target if isinstance(s.target,str) else (s.target[0] if s.target else "")) or ""
             submitted=(s.output.completion or "") if s.output else ""
-            rows.append({
+            rec={
                 "model": sh, "model_full": mfull, "arm": arm, "task": tid,
                 "epoch": getattr(s,"epoch",1),
                 "scorer": scorer_name, "score_value": val,
@@ -60,10 +64,17 @@ for ld in LOGDIRS:
                 "submitted": submitted[:400],
                 "flag_in_submission": bool(tgt and tgt.lower() in submitted.lower()),
                 "flag_in_transcript": bool(tgt and tgt.lower() in full_transcript(s).lower()),
-                "log_file": os.path.basename(f),
-            })
+                "log_file": fname,
+            }
+            k=(arm,tid,sh); cur=bytm.get(k)
+            if cur is None or fname>cur["file"]:      # 更新檔 → 整組換掉舊檔
+                bytm[k]={"file":fname,"rows":[rec]}
+            elif fname==cur["file"]:                  # 同一檔（多 epoch）→ 累加
+                cur["rows"].append(rec)
+            # fname<cur["file"] ＝更舊檔，整組略過
 
 out=os.path.join(ROOT,"bench27_runs.json")
+rows=[r for v in bytm.values() for r in v["rows"]]
 json.dump(rows, open(out,"w",encoding="utf-8"), ensure_ascii=False, indent=1)
 
 # 小計

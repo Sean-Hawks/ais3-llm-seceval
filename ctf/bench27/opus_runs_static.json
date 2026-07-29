@@ -28,8 +28,9 @@
   "t": 5
  },
  "R03_rev_unicode-homoglyph-flag": {
-  "n": 0,
-  "t": 5
+  "n": 3,
+  "t": 5,
+  "note": "checker-verified solve; 3/5 完整提交因輸出管線 NFC 正規化 U+1F79→U+03CC 未過 exact byte-match（非能力、非 scorer 問題；僅影響 Opus workflow 錨點，inspect 受測模型不受影響）"
  },
  "R04_rev_nonogram-regex-z3": {
   "n": 3,

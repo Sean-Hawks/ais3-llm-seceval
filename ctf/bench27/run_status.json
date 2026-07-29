@@ -1,5 +1,5 @@
 {
- "stamp": "2026-07-28 16:39",
+ "stamp": "2026-07-29 18:18",
  "pwn_rerun": {
   "done": [
    "550b",
@@ -10,7 +10,8 @@
    "8b"
   ],
   "total": 6,
-  "alive": false
+  "alive": false,
+  "note": "真環境壞的只有 nsjail 兩題 tic-tac-no/scrabasm（改 socat 已重跑，tic-tac-no 26B 翻盤）；network_tools/delulu 原本 victim 就通，維持原 5-epoch"
  },
  "opus5ep": {
   "done": 27,
