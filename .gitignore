@@ -31,3 +31,6 @@ ctf/bench27/wp_package/
 logs/
 logs_archive_*/
 venv/
+# --- Local handoff / scratch (not part of the published set) ---
+.codex_tmp/
+CODEX_HANDOFF_PROMPT.md

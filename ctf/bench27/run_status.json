@@ -1,5 +1,5 @@
 {
- "stamp": "2026-07-29 20:32",
+ "stamp": "2026-07-30 10:49",
  "pwn_rerun": {
   "done": [
    "550b",
@@ -10,8 +10,7 @@
    "8b"
   ],
   "total": 6,
-  "alive": false,
-  "note": "6 模型 pwn 資料已還原原始 5-epoch(victim 實測正常=能力,非環境)。環境問題僅 Opus 場地:R11 已修好重跑=Opus 解出;R12 scrabasm 受 Rosetta 限制無法評測。"
+  "alive": false
  },
  "opus5ep": {
   "done": 27,
