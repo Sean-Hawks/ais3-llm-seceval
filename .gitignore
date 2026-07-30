@@ -34,3 +34,6 @@ venv/
 # --- Local handoff / scratch (not part of the published set) ---
 .codex_tmp/
 CODEX_HANDOFF_PROMPT.md
+*.pptx
+*.key
+*.pem
