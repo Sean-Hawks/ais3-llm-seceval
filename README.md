@@ -20,7 +20,7 @@
 
 同一模型、同一 harness、同一組態，跑污染組（2022–2023 公開題）與近代組（2026 post-cutoff 真題），差值即污染訊號：
 
-| 模型 | contaminated | recent2026 | **gap** | deep_hard |
+| 模型 | contaminated | recent2026 | **gap** | deep_hard† |
 |---|---|---|---|---|
 | llama-3.1-8b | 19% (11/58) | 0% (0/60) | **+19pp** | 0% |
 | gemma-4-12b | 55% (33/60) | 25% (14/57) | **+30pp** | 21% |
@@ -30,6 +30,8 @@
 | nemotron-3-ultra-550b | 62% (37/60) | 37% (22/60) | **+25pp** | 33% |
 
 *每格為 per-epoch 樣本層級（27 題 × 6 模型 × 5 epoch，扣除 7 個無效樣本後 n=803）。*
+
+† **`deep_hard` 不是第三條年份軸，只列作參考。** 它的 3 題（HTB Cyber Apocalypse 2024 ×2、SekaiCTF 2023 ×1）**同樣是污染題**——皆早於模型截止日且有公開 writeup（`MANIFEST.json` 中三題 `contaminated: true`）。它是「**更難的污染題**」，用途是能力上緣的 case study 與 checkpoint headroom，**不參與 gap 的計算**。gap 只由 contaminated（2022–2023）與 recent2026（2026）這兩個各 12 題、六類對稱的分區構成；**2024／2025 刻意整段留空**，讓對照的兩端各自明確。
 
 三件值得注意的事：
 
@@ -64,7 +66,7 @@
 |---|---|---|---|
 | **contaminated** | 12 | 2022–2023（picoCTF／Cybench）| writeup 幾乎必進訓練資料 → **recall** |
 | **recent2026** | 12 | 真實 2026 CTF（LACTF／BYUCTF，post-cutoff）| 未污染 → **真實能力** |
-| **deep_hard** | 3 | Cybench（HTB-2024／SekaiCTF）| 多階段硬題，checkpoint 有 headroom |
+| **deep_hard** | 3 | Cybench（HTB Cyber Apocalypse 2024 ×2、SekaiCTF 2023 ×1）| **亦為污染題**，但多階段且特別難，checkpoint 有 headroom |
 
 六大類（crypto／rev／forensics／misc／web／pwn）在兩個 12 題分區中對稱分布。每題附 `README.md`＋`writeup.md`＋`checkpoints.json`（各階段 milestone 語意 + 客觀錨點/中間值），供詞向量比對與部分分；服務型題目另附 `challenge.json` 與 Docker compose。
 
