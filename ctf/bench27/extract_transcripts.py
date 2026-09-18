@@ -57,7 +57,7 @@ def authored_text(sample):
     out = []
     for m in sample.messages:
         role = getattr(m, "role", "")
-        if role == "tool":
+        if role != "assistant":
             continue
         txt = getattr(m, "text", None) or ""
         if txt.strip():

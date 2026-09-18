@@ -1,0 +1,21 @@
+{
+  "description": "Plot input fingerprint; scientific interpretation is described in figures/README.md.",
+  "summary_sha256": "a402bf50ea03accf7b5e86884642a09d93ea07cb52f65e2af6e988c6b753438f",
+  "matplotlib": "3.11.2",
+  "models_in_plot_order": [
+    "550b",
+    "26b",
+    "12b",
+    "30b",
+    "70b",
+    "8b"
+  ],
+  "source_sha256": {
+    "configs/bench27.json": "8c866dbc7d5af4da8fc69346ddbfc21aeed8ab2e898425e48d03dbddf5996cfe",
+    "ctf/bench27/MANIFEST.json": "370339e33736cab6835ac987538384a0a588692a08bac88f02d000a6f1d55f15",
+    "ctf/bench27/bench27_runs.json": "182650f79652c2539efba4db55ec391632e880cb868bf8cea0ca03fd7c3d4ae0",
+    "ctf/bench27/bench27_cost.json": "589f8fad330f854d365c41f60f208248109e627146b60e5d9e933025072bfbaf",
+    "ctf/bench27/opus_runs.json": "216284daa3675c9a1e7de0cc595bbe0f18ca1993a6dc6bc4cc3480fb26781b0f",
+    "ctf/bench27/snapshot_audit.json": "64f0ef36b9e0f30188760275c9ac2cb2cdc9addf57ec71aee67ecec43aa69ac1"
+  }
+}

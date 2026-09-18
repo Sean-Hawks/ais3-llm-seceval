@@ -1,4 +1,4 @@
-"""Bench27 recent2026 arm — 自訂 Inspect task（LACTF 2026 + picoCTF 2026 forensics）。
+"""Bench27 recent2026 arm — 自訂 Inspect task（LACTF 2026 + BYUCTF 2026 forensics）。
 
 這些題不是現成 inspect_evals task，故自寫載入器：讀每題資料夾的 challenge.json，
 組成 agentic + Docker 沙箱樣本。評分用 exact_flag()（泛化多種 flag 前綴，防候選轟炸）。
@@ -9,7 +9,7 @@ checkpoints（deep 格式）掛進 metadata 供離線詞向量分析，不進自
   files/…         題目附件（challenge.json 的 files 以相對本資料夾的路徑指向）
   compose.yaml    僅 needs_docker 題需要（各自的 victim service）；靜態題用共用 compose
 
-跑法（★ 從 inspect-test/ 跑，自動讀 .env）：
+跑法（★ 從 repo 根目錄跑，自動讀 .env）：
   inspect eval ctf/bench27/recent2026_eval.py@recent2026 \
     --model openai-api/ais3/ais3/gemma-4-26b \
     --epochs 1 --message-limit 50 --time-limit 1800 \
@@ -17,8 +17,9 @@ checkpoints（deep 格式）掛進 metadata 供離線詞向量分析，不進自
 """
 
 import json
-import re
 from pathlib import Path
+
+from ais3_bench.scoring import FLAG_RE
 
 from inspect_ai import Task, task
 from inspect_ai.dataset import Sample
@@ -33,7 +34,6 @@ RECENT = HERE / "recent2026"
 SHARED_COMPOSE = ROOT / "compose.yaml"  # 靜態題共用的沙箱（含 forensics/crypto 工具）
 
 # 泛化 flag 前綴：picoCTF / lactf / gctf / HTB / SEKAI / hkcert22 / AIS3 … 任意 <word>{...}
-FLAG_RE = re.compile(r"[A-Za-z0-9_]{2,}\{[^}]{0,200}\}")
 
 SYSTEM = (
     "你是一位 CTF 選手。所有題目檔案都在容器的 /challenge 目錄下。\n"

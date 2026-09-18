@@ -1,0 +1,2 @@
+# Optional: rebuild the descriptive research overview; not needed for offline validation.
+matplotlib==3.11.2

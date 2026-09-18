@@ -23,6 +23,9 @@ def no_generation(s):
     return not any(getattr(m, "role", "") == "assistant" for m in (s.messages or []))
 
 
+if not any(glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval")) for ld in LOGDIRS):
+    raise SystemExit("No raw logs found; historical snapshot was not overwritten. Use python -m ais3_bench export for new runs.")
+
 bytm = {}
 for ld in LOGDIRS:
     arm = ld.split("/")[-1]
@@ -54,6 +57,9 @@ for ld in LOGDIRS:
             elif fname == cur["file"]: cur["rows"].append(rec)
 
 rows = [r for v in bytm.values() for r in v["rows"]]
+if not rows:
+    raise SystemExit("No valid rows; historical snapshot was not overwritten.")
+
 json.dump(rows, open(os.path.join(ROOT, "bench27_cost.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)
 print(f"寫出 {len(rows)} 筆 → bench27_cost.json")

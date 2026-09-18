@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "epochs": 5,
+  "message_limit": 50,
+  "time_limit": 1800,
+  "max_tool_output": 32768,
+  "models": {
+    "8b": "llama-3.1-8b",
+    "12b": "gemma-4-12b",
+    "26b": "gemma-4-26b",
+    "30b": "nemotron-cascade-2-30b",
+    "70b": "llama-3.3-70b",
+    "550b": "nemotron-3-ultra-550b"
+  },
+  "model_prefix": "openai-api/ais3/ais3/",
+  "max_samples": {
+    "intercode": 5,
+    "cybench": 6,
+    "recent2026": 2,
+    "deep_hard": 3
+  }
+}

@@ -1,5 +1,4 @@
 
-!.env.example
 # --- Archives / caches (regenerable bundles; keep the loose files, not the tarball) ---
 # --- Inspect AI eval logs (large, machine-specific; regenerate by running evals) ---
 # --- OS / editor ---
@@ -37,3 +36,14 @@ CODEX_HANDOFF_PROMPT.md
 *.pptx
 *.key
 *.pem
+
+# Preserve the public configuration example after secret patterns.
+!.env.example
+# Local previews, reports and new experiment outputs
+output/
+.pptx-review.*/
+.coverage
+htmlcov/
+
+# Preserve the tracked historical slide deck after moving it.
+!docs/history/*.pptx

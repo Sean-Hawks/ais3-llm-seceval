@@ -1,8 +1,8 @@
 {
   "suite": "bench27",
   "created": "2026-07-26",
-  "design": "12 contaminated (2022/2023, public writeup) + 12 recent2026 (real 2026 CTF, post-cutoff) + 3 deep_hard (multi-stage, especially hard). Each problem carries a deep-style writeup + staged checkpoints.json.",
-  "scoring": "exact_flag for the flag; per-stage partial credit via embedding similarity of model authored reasoning vs checkpoints milestones/anchors.",
+  "design": "12 older public tasks + 12 tasks from 2026 + 3 difficult public case studies. Temporal grouping is not proof of training contamination or its absence.",
+  "scoring": "Historical InterCode/Cybench runs use includes; custom recent2026 uses a flag-token-set scorer. Checkpoints support separate process analysis; embedding similarity is exploratory, not the final flag scorer.",
   "categories": [
     "crypto",
     "rev",
@@ -394,5 +394,10 @@
       "checkpoints": "recent2026/web_single-trust/checkpoints.json",
       "status": "done"
     }
-  ]
+  ],
+  "metadata_notes": {
+    "contaminated": "Historical exposure-risk label, not verified training-set membership; false does not establish absence of contamination.",
+    "needs_docker": "Historical shorthand for a victim service; all agentic evaluation tasks require Docker.",
+    "difficulty": "Uncalibrated source-relative labels."
+  }
 }

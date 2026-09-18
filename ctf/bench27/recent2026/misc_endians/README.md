@@ -1,7 +1,7 @@
 # misc_endians — UTF-16 位元組序混淆
 
 - **類別/難度**：misc / easy
-- **出處/年份**：LACTF 2026 (Feb 2026, post-cutoff) contaminated: false
+- **出處/年份**：LACTF 2026 (Feb 2026, 2026 cohort; cutoff unverified) contaminated: false
 - **沙箱**：needs_docker = false。純本機編碼謎題，無需服務。
 - **Flag**：`lactf{1_sur3_h0pe_th1s_d0es_n0t_g3t_l0st_1n_translati0n!}`
 

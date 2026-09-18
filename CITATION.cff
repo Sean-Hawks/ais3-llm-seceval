@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "Please cite this software artifact and identify the release or commit used. Cite the companion analysis repository separately when using its pipeline."
+title: "AIS3 LLM Security Evaluation: Writeup-Based Analysis of CTF Solution Trajectories"
+type: software
+version: 0.1.0
+authors:
+  - family-names: "陳"
+    given-names: "威翰"
+  - family-names: "林"
+    given-names: "禹丞"
+  - family-names: "洪"
+    given-names: "軾洋"
+  - family-names: "張"
+    given-names: "宸瀚"
+repository-code: "https://github.com/Sean-Hawks/ais3-llm-seceval"
+url: "https://github.com/Sean-Hawks/ais3-llm-seceval"
+abstract: "An AIS3 2026 AI Track Best Project Award capstone artifact: an Inspect AI CTF harness, Bench27 outcome snapshot, reference checkpoints and interfaces to a separate trajectory step-analysis pipeline. The retained 803 attempts were retrospectively reconciled with local raw logs."
+keywords:
+  - CTF
+  - LLM evaluation
+  - cybersecurity
+  - trajectory analysis
+  - reproducibility
+  - AIS3

@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "expected_attempts": 810,
+  "valid_attempts": 803,
+  "missing_attempts": [
+    {
+      "arm": "contaminated",
+      "task": "8",
+      "model": "8b",
+      "epoch": 1
+    },
+    {
+      "arm": "contaminated",
+      "task": "missingbits",
+      "model": "8b",
+      "epoch": 5
+    },
+    {
+      "arm": "deep_hard",
+      "task": "permuted",
+      "model": "12b",
+      "epoch": 1
+    },
+    {
+      "arm": "deep_hard",
+      "task": "permuted",
+      "model": "8b",
+      "epoch": 4
+    },
+    {
+      "arm": "recent2026",
+      "task": "crypto_six-seven-again",
+      "model": "12b",
+      "epoch": 2
+    },
+    {
+      "arm": "recent2026",
+      "task": "crypto_six-seven-again",
+      "model": "12b",
+      "epoch": 4
+    },
+    {
+      "arm": "recent2026",
+      "task": "crypto_six-seven-again",
+      "model": "12b",
+      "epoch": 5
+    }
+  ],
+  "summed_sample_hours": 80.55611111111111,
+  "telemetry_anomalies": [
+    {
+      "arm": "contaminated",
+      "task": "network_tools",
+      "model": "8b",
+      "epoch": 4,
+      "field": "working_time",
+      "value": -1340.8,
+      "treatment": "preserved; exclude from throughput/working-time analysis"
+    }
+  ],
+  "models": [
+    {
+      "model": "8b",
+      "model_full": "llama-3.1-8b",
+      "solved_tasks": 4,
+      "valid_attempts": 132,
+      "solved_attempts": 11,
+      "arms": {
+        "contaminated": {
+          "solved": 11,
+          "valid_attempts": 58,
+          "accuracy": 0.1896551724137931
+        },
+        "recent2026": {
+          "solved": 0,
+          "valid_attempts": 60,
+          "accuracy": 0.0
+        },
+        "deep_hard": {
+          "solved": 0,
+          "valid_attempts": 14,
+          "accuracy": 0.0
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 1,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 1,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 1,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 1,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 18.96551724137931
+    },
+    {
+      "model": "12b",
+      "model_full": "gemma-4-12b",
+      "solved_tasks": 12,
+      "valid_attempts": 131,
+      "solved_attempts": 50,
+      "arms": {
+        "contaminated": {
+          "solved": 33,
+          "valid_attempts": 60,
+          "accuracy": 0.55
+        },
+        "recent2026": {
+          "solved": 14,
+          "valid_attempts": 57,
+          "accuracy": 0.24561403508771928
+        },
+        "deep_hard": {
+          "solved": 3,
+          "valid_attempts": 14,
+          "accuracy": 0.21428571428571427
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 3,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 2,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 4,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 3,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 30.438596491228076
+    },
+    {
+      "model": "26b",
+      "model_full": "gemma-4-26b",
+      "solved_tasks": 14,
+      "valid_attempts": 135,
+      "solved_attempts": 64,
+      "arms": {
+        "contaminated": {
+          "solved": 35,
+          "valid_attempts": 60,
+          "accuracy": 0.5833333333333334
+        },
+        "recent2026": {
+          "solved": 24,
+          "valid_attempts": 60,
+          "accuracy": 0.4
+        },
+        "deep_hard": {
+          "solved": 5,
+          "valid_attempts": 15,
+          "accuracy": 0.3333333333333333
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 3,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 3,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 4,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 3,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 1,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 18.333333333333336
+    },
+    {
+      "model": "30b",
+      "model_full": "nemotron-cascade-2-30b",
+      "solved_tasks": 10,
+      "valid_attempts": 135,
+      "solved_attempts": 39,
+      "arms": {
+        "contaminated": {
+          "solved": 32,
+          "valid_attempts": 60,
+          "accuracy": 0.5333333333333333
+        },
+        "recent2026": {
+          "solved": 6,
+          "valid_attempts": 60,
+          "accuracy": 0.1
+        },
+        "deep_hard": {
+          "solved": 1,
+          "valid_attempts": 15,
+          "accuracy": 0.06666666666666667
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 2,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 2,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 3,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 3,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 43.333333333333336
+    },
+    {
+      "model": "70b",
+      "model_full": "llama-3.3-70b",
+      "solved_tasks": 7,
+      "valid_attempts": 135,
+      "solved_attempts": 26,
+      "arms": {
+        "contaminated": {
+          "solved": 25,
+          "valid_attempts": 60,
+          "accuracy": 0.4166666666666667
+        },
+        "recent2026": {
+          "solved": 1,
+          "valid_attempts": 60,
+          "accuracy": 0.016666666666666666
+        },
+        "deep_hard": {
+          "solved": 0,
+          "valid_attempts": 15,
+          "accuracy": 0.0
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 1,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 2,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 1,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 3,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 40.0
+    },
+    {
+      "model": "550b",
+      "model_full": "nemotron-3-ultra-550b",
+      "solved_tasks": 15,
+      "valid_attempts": 135,
+      "solved_attempts": 64,
+      "arms": {
+        "contaminated": {
+          "solved": 37,
+          "valid_attempts": 60,
+          "accuracy": 0.6166666666666667
+        },
+        "recent2026": {
+          "solved": 22,
+          "valid_attempts": 60,
+          "accuracy": 0.36666666666666664
+        },
+        "deep_hard": {
+          "solved": 5,
+          "valid_attempts": 15,
+          "accuracy": 0.3333333333333333
+        }
+      },
+      "categories": {
+        "crypto": {
+          "solved_tasks": 4,
+          "total_tasks": 6
+        },
+        "rev": {
+          "solved_tasks": 3,
+          "total_tasks": 4
+        },
+        "forensics": {
+          "solved_tasks": 4,
+          "total_tasks": 4
+        },
+        "misc": {
+          "solved_tasks": 3,
+          "total_tasks": 5
+        },
+        "web": {
+          "solved_tasks": 1,
+          "total_tasks": 4
+        },
+        "pwn": {
+          "solved_tasks": 0,
+          "total_tasks": 4
+        }
+      },
+      "gap_percentage_points": 25.000000000000007
+    }
+  ],
+  "sources_sha256": {
+    "configs/bench27.json": "8c866dbc7d5af4da8fc69346ddbfc21aeed8ab2e898425e48d03dbddf5996cfe",
+    "ctf/bench27/MANIFEST.json": "370339e33736cab6835ac987538384a0a588692a08bac88f02d000a6f1d55f15",
+    "ctf/bench27/bench27_runs.json": "182650f79652c2539efba4db55ec391632e880cb868bf8cea0ca03fd7c3d4ae0",
+    "ctf/bench27/bench27_cost.json": "589f8fad330f854d365c41f60f208248109e627146b60e5d9e933025072bfbaf",
+    "ctf/bench27/opus_runs.json": "216284daa3675c9a1e7de0cc595bbe0f18ca1993a6dc6bc4cc3480fb26781b0f",
+    "ctf/bench27/snapshot_audit.json": "64f0ef36b9e0f30188760275c9ac2cb2cdc9addf57ec71aee67ecec43aa69ac1"
+  },
+  "raw_log_audit": {
+    "snapshot_match": true,
+    "sample_status_counts": {
+      "sample_error": 3,
+      "superseded_run": 60,
+      "valid": 803,
+      "zero_generation": 4
+    },
+    "raw_log_files": 30
+  },
+  "frontier_reference": {
+    "label": "Opus-4.8 (historical project label; different scaffold)",
+    "solved_tasks": 27,
+    "solved_attempts": 119,
+    "attempts": 131,
+    "comparable_to_main_models": false
+  }
+}

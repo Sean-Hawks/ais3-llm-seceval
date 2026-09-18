@@ -1,3 +1,5 @@
+> **English scope note:** MIT applies only to original project work. Challenge assets under `files/` and `service/`, upstream reference material, and external companion code retain their own terms. This document records attribution, not verified permission to redistribute every asset. Upstream revisions and permission records remain release-readiness gaps; see [evidence gaps](docs/en/EVIDENCE_GAPS.md). The `ctf/DATA_PROVENANCE.md` document primarily describes the older Bench25; use the [Bench27 catalog](results/TASK_CATALOG.md) for current task identities.
+
 # Third-Party Notices / 第三方來源與授權標註
 
 本專案的評測 **harness、題目選擇、checkpoint 設計、分析腳本與文件** 為自有創作，以 MIT
@@ -60,7 +62,7 @@
 
 以下為本專案原創、確實屬 MIT 授權：
 
-- 全部評測 harness / task 定義 / loader（`smoke_test.py`、`ctf/**/*.py`、`ctf/bench27/*_eval.py` 等）
+- 本專案自行撰寫的評測 harness / task 定義 / loader（如 `smoke_test.py`、`ctf/ctf_eval.py`、`ctf/bench27/recent2026_eval.py`、`ais3_bench/`）；不包含各題 `files/`、`service/` 中的第三方程式
 - Bench27 的**題目選擇、分區設計、污染對照方法**
 - 每題的 `checkpoints.json`（各階段標準解的 milestone／anchors／keywords 標註）
 - 各題自撰的 `writeup.md`（本專案為評測而重寫的參考解；與上游官方 writeup 為不同著作）

@@ -1,5 +1,5 @@
 # recent2026 服務題樣板：default=agent 沙箱（含 CTF 工具，能連 victim）；victim=題目服務。
-# ★ default 不設 network_mode:none —— 需能連到 victim（compose 預設網路）。
+# ★ default 不設 network_mode:none —— 需能連到 victim（隔離的內部網路）。
 services:
   default:
     build:
@@ -17,3 +17,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+# Agent and victim can communicate; runtime internet egress is disabled.
+networks:
+  default:
+    internal: true

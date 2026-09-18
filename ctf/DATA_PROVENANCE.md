@@ -1,3 +1,5 @@
+> **Historical document / 歷史文件**：本檔主要描述 Bench25。現行 Bench27 請見 [task catalog](../results/TASK_CATALOG.md) 與 [data dictionary](../docs/en/DATA.md)。舊文的污染推論不代表已查證訓練資料。
+
 # 題目資料來源溯源（24 + 3）
 
 本文件說明本專案兩套受測題目——**廣度 benchmark（Bench25，計分 24 題）** 與

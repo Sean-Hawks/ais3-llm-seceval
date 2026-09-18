@@ -34,6 +34,9 @@ def full_transcript(s):
 #   舊 5-epoch 壞檔與新 1-epoch 檔並存）。**每個 (arm,題,模型) 只保留「最新那一次跑」的全部 epoch**
 #   ——用最新 log 檔（檔名 ISO 時間戳，字典序即時序）的樣本整組取代舊檔，1-epoch 重跑即可完整
 #   洗掉舊 5-epoch（不會殘留舊 epoch 2–5）。cybench 一檔含多題故按 (題,模型) 而非整檔判斷。
+if not any(glob.glob(os.path.join(INSPECT_ROOT, ld, "*.eval")) for ld in LOGDIRS):
+    raise SystemExit("No raw logs found; historical snapshot was not overwritten. Use python -m ais3_bench export for new runs.")
+
 bytm={}   # (arm,tid,sh) -> {"file": 最新log檔名, "rows": [該檔此key的所有樣本]}
 for ld in LOGDIRS:
     arm=ld.split("/")[-1]
@@ -75,6 +78,9 @@ for ld in LOGDIRS:
 
 out=os.path.join(ROOT,"bench27_runs.json")
 rows=[r for v in bytm.values() for r in v["rows"]]
+if not rows:
+    raise SystemExit("No valid rows; historical snapshot was not overwritten.")
+
 json.dump(rows, open(out,"w",encoding="utf-8"), ensure_ascii=False, indent=1)
 
 # 小計
