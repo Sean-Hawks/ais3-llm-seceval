@@ -47,6 +47,11 @@ class SnapshotTests(unittest.TestCase):
         inputs = read_json(ROOT / 'results/figures/inputs.json')
         self.assertEqual(inputs['summary_sha256'], hashlib.sha256(artifacts()['summary.json'].encode()).hexdigest())
 
+    def test_summed_time_is_stable_across_python_versions_and_row_order(self):
+        self.assertEqual(self.summary['summed_sample_hours'], 80.55611111111111)
+        reversed_summary = aggregate(self.manifest, list(reversed(self.rows)), self.config)
+        self.assertEqual(reversed_summary['summed_sample_hours'], self.summary['summed_sample_hours'])
+
     def test_different_model_denominators(self):
         totals = {r['model']: r['valid_attempts'] for r in self.summary['models']}
         self.assertEqual(totals, {'8b': 132, '12b': 131, '26b': 135, '30b': 135, '70b': 135, '550b': 135})

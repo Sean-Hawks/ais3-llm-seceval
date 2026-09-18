@@ -3,6 +3,7 @@
 from collections import Counter
 import hashlib
 import json
+import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -168,7 +169,7 @@ def aggregate(manifest, rows, config):
                        "gap_percentage_points": 100 * (old - recent) if old is not None and recent is not None else None})
     return {"schema_version": 1, "expected_attempts": len(expected), "valid_attempts": len(rows),
             "missing_attempts": [dict(zip(("arm", "task", "model", "epoch"), k)) for k in missing],
-            "summed_sample_hours": sum(r["total_time"] for r in rows) / 3600,
+            "summed_sample_hours": math.fsum(r["total_time"] for r in rows) / 3600,
             "telemetry_anomalies": [{"arm": r["arm"], "task": r["task"], "model": r["model"],
                                      "epoch": r["epoch"], "field": "working_time", "value": r["working_time"],
                                      "treatment": "preserved; exclude from throughput/working-time analysis"}

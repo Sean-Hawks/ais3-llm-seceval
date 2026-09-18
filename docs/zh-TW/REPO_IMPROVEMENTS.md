@@ -9,7 +9,7 @@
 | 改善面向 | 具體變更 | 讀者得到的好處 |
 |---|---|---|
 | 專題定位 | 首頁回到 writeup 步驟分析；清楚區分 flag 與過程訊號 | 直接知道專題在回答什麼 |
-| 雙語文件 | 繁中／英文首頁，六組對應指南，文件導覽 | 中英文讀者都有完整入門路徑 |
+| 雙語文件 | 繁中／英文首頁，八組對應指南，文件導覽 | 中英文讀者都有完整入門路徑 |
 | 可重建結果 | 標準函式庫 CLI 重建中英表格、summary JSON、27 題索引 | 不需金鑰也能驗算 803 筆結果 |
 | 資料透明 | 分開 task coverage／attempt accuracy，列七個缺失 ID、來源 SHA-256、負時間異常 | 避免混淆分母、證據與推論 |
 | 統一執行 | 單一 config、預覽／實跑入口、三支舊腳本轉相容入口、新 log 目錄 | 避免舊 1 epoch／25 訊息設定混入正式條件 |
@@ -23,12 +23,12 @@
 
 ## 驗證紀錄
 
-- 38 項離線行為測試通過：結果、分母、重複樣本、Unicode、多候選 flag、模型 authored 抽取、最新 run 選擇、匯出 audit、報告重建與設定。
+- 40 項離線行為測試通過：結果、分母、重複樣本、Unicode、多候選 flag、模型 authored 抽取、最新 run 選擇、匯出 audit、報告重建與設定。
 - 27 題定義、checkpoints、12 題自訂附件、803 筆結果與成本 join 通過。
 - 已安裝 Inspect 的 task loader 與 scorer 整合檢查通過；不啟動模型或容器。
 - 七份 compose 可由 Docker Compose 解析，六個服務網路確認 `internal: true`、無 host port 發布，build context 存在。
 - `bench27_runs.json`、`bench27_cost.json`、`opus_runs.json` 與修改前逐 byte 一致；搬移的四份歷史檔案亦完整保留。
-- CI 配置 Python 3.10、3.12、3.14 的離線檢查；本次未宣稱 GitHub 上的 workflow 已執行。
+- CI 涵蓋 Python 3.10、3.12、3.14 離線檢查與已安裝 Inspect 的整合檢查。雲端執行紀錄及對應 commit 見 [GitHub Actions](https://github.com/Sean-Hawks/ais3-llm-seceval/actions/workflows/ci.yml)；正式版本附發布驗證紀錄。
 
 全新 Python 3.14 虛擬環境可安裝 requirements，`pip check` 與 gateway SDK／Cybench／自訂 task／scorer 整合檢查通過。只含準備公開檔案的乾淨副本（不含 .env、.venv、logs）亦通過離線驗證。
 
@@ -39,7 +39,7 @@
 1. **把簡報完整重建**：確認雙 repo 正式 commits，取得第 37、41–43 頁逐步分數、畫圖程式及排除清單，再產生可查核圖表。
 2. **提升研究說服力**：人工校準 anchor 命中、分析替代解法、用題目層級 bootstrap；用相同 scaffold 的 frontier 或私有題做更公平對照。
 3. **提升環境可攜性**：實際測 Linux／ARM／x86 容器、補工具能力清單、釘選 image digests 與解析後依賴。
-4. **正式發布品質**：確認逐題散布授權、正式作者分工，提供帶來源雜湊的 release 包與適當的原始 log 存檔。
+4. **擴充研究封存**：確認逐題散布授權、正式作者分工，補入適當去識別的原始 log 存檔；發布包已包含來源雜湊與驗證清單。
 
 本機 Docker daemon 未啟動，因此未做容器建置、服務健康與端到端解題測試。歷史 pwn 的 socat 適配、SageMath／QR 工具缺口仍明列於方法與設定指南；這些限制不由離線測試消除。
 
