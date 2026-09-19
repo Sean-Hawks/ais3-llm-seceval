@@ -77,7 +77,9 @@ This is observed coverage over up to five valid attempts, **not single-attempt a
 
 The frontier reference uses a different scaffold and is reported separately. Current data show 27/27 tasks and 119/131 successful attempts; slides 22 and 34 show 26/27. Version and scoring reconciliation remain open. Model names retain experiment labels; vendor identity, exact revisions and training cutoffs have not been independently established.
 
-## Hugging Face dataset export
+## Hugging Face dataset
+
+Browse and download [Sean-Hawks/ais3-bench27](https://huggingface.co/datasets/Sean-Hawks/ais3-bench27): 803 evaluation observations, a 27-task catalog and seven exclusions. The English/Traditional Chinese Dataset Card includes the award, provenance, usage examples and research limits. Pin Hub revision `v0.1.0` for this snapshot.
 
 A [dedicated export guide](publishing/huggingface/README.md) prepares the fixed v0.1.0 outcome dataset: 803 observations, 27 catalog entries and seven exclusions, with a bilingual Dataset Card and checksums. The export is local and does not upload automatically.
 

@@ -124,6 +124,8 @@ python -m ais3_bench run --arm recent2026 --model 8b --execute
 
 原創 harness、方法設計與文件依 [MIT](LICENSE) 授權；第三方題檔與參考解依各自條款，見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。公開可下載不等於自動取得 MIT 授權。本 repo 不把第三方材料重新授權。
 
-## Hugging Face 資料集匯出
+## Hugging Face 資料集
+
+已發布 [Sean-Hawks/ais3-bench27](https://huggingface.co/datasets/Sean-Hawks/ais3-bench27)，可瀏覽及下載 803 筆結果、27 題索引與 7 筆排除紀錄。雙語 Dataset Card 提供獲獎資訊、來源、載入範例與研究限制；此快照可固定使用 Hub 版本 `v0.1.0`。
 
 [發布指南](publishing/huggingface/README.md)可產生固定 v0.1.0 的 803 筆結果、27 題索引與 7 筆排除紀錄，附雙語 Dataset Card 和校驗碼。匯出在本機完成，不會自動上傳。

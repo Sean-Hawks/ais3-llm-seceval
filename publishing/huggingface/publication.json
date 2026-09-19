@@ -1,0 +1,29 @@
+{
+  "dataset_id": "Sean-Hawks/ais3-bench27",
+  "url": "https://huggingface.co/datasets/Sean-Hawks/ais3-bench27",
+  "commit": "0e2077ee3418985662250d8374ff4c623aa3fd5d",
+  "commit_url": "https://huggingface.co/datasets/Sean-Hawks/ais3-bench27/commit/0e2077ee3418985662250d8374ff4c623aa3fd5d",
+  "files": [
+    "CITATION.bib",
+    "CITATION.cff",
+    "LICENSE",
+    "README.md",
+    "SHA256SUMS",
+    "THIRD_PARTY_NOTICES.md",
+    "data/attempts.jsonl",
+    "data/exclusions.jsonl",
+    "data/tasks.jsonl",
+    "figures/outcomes.png",
+    "provenance.json"
+  ],
+  "verification": {
+    "anonymous_download": true,
+    "all_files_sha256_match": true,
+    "row_counts": {
+      "attempts": 803,
+      "tasks": 27,
+      "exclusions": 7
+    }
+  },
+  "tag": "v0.1.0"
+}

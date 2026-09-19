@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Publish [Sean-Hawks/ais3-bench27](https://huggingface.co/datasets/Sean-Hawks/ais3-bench27) with a `v0.1.0` Hub tag; verify anonymous downloads, all file hashes and 803/27/7 loaded rows.
 - Add a field-limited Hugging Face dataset exporter for the fixed v0.1.0 snapshot, with bilingual metadata, three viewer configurations and checksums.
 - Add five publication regression checks covering identities, excluded content, source drift, determinism and package links.
 
