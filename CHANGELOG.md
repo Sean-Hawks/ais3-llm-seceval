@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add a field-limited Hugging Face dataset exporter for the fixed v0.1.0 snapshot, with bilingual metadata, three viewer configurations and checksums.
+- Add five publication regression checks covering identities, excluded content, source drift, determinism and package links.
+
 ## 0.1.0 — Research artifact release
 
 This release combines the original July 2026 experiment with a September 2026 reproducibility and documentation update. The historical `bench27_runs.json`, `bench27_cost.json` and `opus_runs.json` retain their original bytes.

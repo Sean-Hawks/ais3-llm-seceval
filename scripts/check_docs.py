@@ -10,7 +10,7 @@ files = [ROOT / name for name in ('README.md', 'README.en.md', 'README.zh-TW.md'
 files += [ROOT / 'docs/README.md', ROOT / 'docs/SETUP.md']
 files += list((ROOT / 'docs/en').glob('*.md')) + list((ROOT / 'docs/zh-TW').glob('*.md'))
 files += list((ROOT / 'results').glob('*.md'))
-files += [ROOT / 'results/figures/README.md']
+files += [ROOT / 'results/figures/README.md', ROOT / 'publishing/huggingface/README.md']
 files += [ROOT / name for name in ('ctf/README.md', 'ctf/bench27/README.md',
                                    'ctf/bench27/recent2026/SERVICE_WIRING.md',
                                    'docs/history/README.md', 'docs/REPORT_前置作業.md',

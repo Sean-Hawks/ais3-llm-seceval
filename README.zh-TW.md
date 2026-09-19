@@ -123,3 +123,7 @@ python -m ais3_bench run --arm recent2026 --model 8b --execute
 歡迎依 [CONTRIBUTING.md](CONTRIBUTING.md) 貢獻；執行與回報問題前請讀 [SECURITY.md](SECURITY.md)。引用方式見 [CITATION.cff](CITATION.cff)。
 
 原創 harness、方法設計與文件依 [MIT](LICENSE) 授權；第三方題檔與參考解依各自條款，見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。公開可下載不等於自動取得 MIT 授權。本 repo 不把第三方材料重新授權。
+
+## Hugging Face 資料集匯出
+
+[發布指南](publishing/huggingface/README.md)可產生固定 v0.1.0 的 803 筆結果、27 題索引與 7 筆排除紀錄，附雙語 Dataset Card 和校驗碼。匯出在本機完成，不會自動上傳。

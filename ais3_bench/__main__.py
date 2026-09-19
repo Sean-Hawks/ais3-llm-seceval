@@ -59,6 +59,9 @@ def main(argv=None):
     export = subs.add_parser("export", help="export new Inspect logs separately from the historical snapshot")
     export.add_argument("--logs", type=Path, required=True, help="directory containing one subdirectory per arm")
     export.add_argument("--output", type=Path, default=ROOT / "output/export")
+    hub = subs.add_parser("hub-export", help="prepare the fixed v0.1.0 Hugging Face dataset locally; never upload")
+    hub.add_argument("--output", type=Path, default=ROOT / "output/huggingface/bench27-v0.1.0")
+    hub.add_argument("--repo-id", default="Sean-Hawks/ais3-bench27")
     args = parser.parse_args(argv)
     try:
         if args.command == "validate":
@@ -84,6 +87,10 @@ def main(argv=None):
             from .logs import export_logs
             count = export_logs(args.logs, args.output)
             print(f"Exported {count} valid attempts to {args.output}; audit and authored JSONL included")
+        elif args.command == "hub-export":
+            from .hub import write_hub_export
+            names = write_hub_export(args.output, repo_id=args.repo_id)
+            print(f"Prepared {len(names)} files in {args.output}; nothing uploaded")
     except (ValueError, OSError, KeyError, json.JSONDecodeError, ImportError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
